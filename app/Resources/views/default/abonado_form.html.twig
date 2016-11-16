@@ -1,0 +1,115 @@
+{% extends 'panel_base.html.twig' %}
+
+{% block title %}{{ parent() }}{% endblock %}
+
+{% block body %} {{parent()}}
+
+ <div id="wrapper">
+        {% block sidebar %}{{parent()}}{% endblock%}
+
+        {% block page_content %}
+    <div id="page-wrapper">
+
+      <div class="container-fluid">
+
+        <!-- Page Heading -->
+        <div class="row">
+          <div class="col-lg-6">
+            <h2 class="page-header">
+              Abonado <small>Nuevo Registro</small>
+            </h2>
+          </div>
+        </div>
+        <!-- /.row -->
+
+        <div class="row">
+          <div class="col-lg-10">
+            <div class="well bs-component">
+              <form class="form-horizontal">
+                <fieldset>
+                  <legend>Datos</legend>
+                  <div class="form-group">
+                    <label for="inputNombre" class="col-lg-2 control-label">Nombre</label>
+                    <div class="col-lg-6">
+                      <input type="text" class="form-control" id="inputNombre" placeholder="">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="inputApellido" class="col-lg-2 control-label">Apellido</label>
+                    <div class="col-lg-6">
+                      <input type="text" class="form-control" id="inputApellido" placeholder="">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="inputEmail" class="col-lg-2 control-label">Email</label>
+                    <div class="col-lg-6">
+                      <input type="email" class="form-control" id="inputEmail" placeholder="">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="inputDireccion" class="col-lg-2 control-label">Direccion</label>
+                    <div class="col-lg-6">
+                      <input type="text" class="form-control" id="inputDireccion" placeholder="">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="selectLocalidad" class="col-lg-2 control-label">Localidad</label>
+                    <div class="col-lg-6">
+                      <select class="form-control" id="selectLocalidad">
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                        <option>5</option>
+                      </select>        
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="inputDireccion" class="col-lg-2 control-label">Telefono Fijo</label>
+                    <div class="col-lg-6">
+                      <input type="text" class="form-control" id="inputTelFijo" placeholder="">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="inputDireccion" class="col-lg-2 control-label">Telefono Celular</label>
+                    <div class="col-lg-6">
+                      <input type="text" class="form-control" id="inputTelCelular" placeholder="">
+                    </div>
+                  </div>
+
+                  
+                  <div class="form-group">
+                    <div class="col-lg-10 col-lg-offset-2">
+                      <button type="reset" class="btn btn-default">Cancelar</button>
+                      <button type="submit" class="btn btn-primary">Aceptar</button>
+                    </div>
+                  </div>
+                </fieldset>
+              </form>
+            </div>
+          </div> 
+        </div>
+        <!-- /.row -->      
+
+        
+
+      </div>
+      <!-- /.container-fluid -->
+
+    </div>
+    <!-- /#page-wrapper -->
+        {% endblock %}
+</div>
+<!-- /#wrapper -->
+
+  
+
+{% endblock %}
+
+{% block footer %}  {{ parent() }}  {% endblock %}
+
+{%block javascripts %}{{ parent() }}
+
+
+   
+{% endblock %}
