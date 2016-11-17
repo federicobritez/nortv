@@ -26,7 +26,11 @@
 
     <!-- Date Time Picker  -->
     
-    <link rel="stylesheet" href="{{asset('bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css') }}" />
+    <link rel="stylesheet" href="{{asset('vendor/datetimepicker/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css') }}" />
+
+    <!-- Data Tables   -->
+
+    <link rel="stylesheet" type="text/css" href="{{asset('vendor/DataTables/media/css/dataTables.bootstrap.min.css') }}"/>
 
     <!-- Custom styles for this template -->
     <!--<link rel="stylesheet" href="{{ asset('css/cover.css') }}" />-->
@@ -68,13 +72,19 @@
   {% endblock %}
   {% block javascripts %}
 
-    <script type="text/javascript" src="{{asset('bower_components/jquery/dist/jquery.min.js') }}"></script>
-    <script type="text/javascript" src="{{asset('bower_components/moment/min/moment.min.js') }}"></script>
-    <script type="text/javascript" src="{{asset('bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js') }}"></script>
 
     <!-- jQuery -->
-    <!--<script src="{{ asset('js/jquery.js') }}"></script>-->
+    <script src="{{ asset('js/jquery.js') }}"></script>
 
+
+    <script type="text/javascript" src="{{asset('vendor/datetimepicker/jquery/dist/jquery.min.js') }}"></script>
+    <script type="text/javascript" src="{{asset('vendor/datetimepicker/moment/min/moment.min.js') }}"></script>
+    <script type="text/javascript" src="{{asset('vendor/datetimepicker/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js') }}"></script>
+
+    <script type="text/javascript" src="{{asset('vendor/DataTables/media/js/jquery.dataTables.js')}}"></script>
+    <script type="text/javascript" src="{{asset('vendor/DataTables/media/js/dataTables.bootstrap4.min.js')}}"></script>
+
+    <
     <!-- Bootstrap Core JavaScript -->
     <script src="{{ asset('js/bootstrap.min.js') }}"></script>
 
