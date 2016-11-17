@@ -1,0 +1,23 @@
+
+Instrucciones antes de que se rompan la cabeza al pedo:
+
+
+1 - Instalar Symfony 3.1.6 y php 5.6.26 con los driver PDO (Para la base de datos pué).
+2 - Crear un nuevo proyecto llamado "norTv" con los comandos:
+	synfony new norTv
+3 - reemplazar los archivos de este repo en el directorio norTv que creó Synfony.
+4 - Hacer un git pull para ver si tenemos la última versión de las modificaciones.
+5 - Probar. Para eso pararse en el directorio norTv y ejectutar:
+		php bin/console server:run
+
+		Indicará que el servidor esta corriendo y en que puerto. Seguro es el 8000
+
+		Levantar el browser y abrir la url : localhost:8000/index
+
+6 - Para probarlo con apache directamente: [Pendiente para documentar]
+7 - Los datos de la conexión a la base de datos obviamente no están en el repo. 
+Se debe editar el archivo app/config/parameters.yml y colocar los parámetros de
+la base de datos que fueron pasados por whataaaapp. 
+
+
+		
