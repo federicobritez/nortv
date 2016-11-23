@@ -6,6 +6,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\Query\ResultSetMapping;
+use Doctrine\DBAL\DriverManager;
+
 
 
 class DefaultController extends Controller
@@ -47,7 +49,7 @@ class DefaultController extends Controller
         }
 
         if($page == "listado"){
-            $abonados = null;//$this->getAbonados();
+            $abonados = $this->getInstanciaConexion();//$this->getAbonados();
 
             return $this->render(sprintf('default/%s.html.twig', "abonado_list"),
                             array("debug" => $abonados)); 
@@ -64,9 +66,53 @@ class DefaultController extends Controller
      */
     public function reclamoAction(Request $request,$page="index")
     {
+        //Un registro en tabla reclamos con, numero , estado PENDIENTE_REVISIÓN, fecha , la descripción y la vía por donde se relizo. Relaciona Abonado con la conexión.
         if($page = "nuevo") {
+            //Parametros del nuevo reclamo
+            $idAbonado =    $request->get();
+            $idConexion =   $request->get();
+            $descripcion =  $request->get();
+            $via =          $request->get();
+            $fecha =        new \DateTime();
+            $estado =       "PENDIENTE_REVISIÓN"; //Hacer una clase abstracta como una enumeración
 
-            $abonados = $this->getAbonados();
+
+            $conn = $this->getInstanciaConexion();
+            $query = $conn->prepare("
+                INSERT INTO 
+                Reclamo 
+                ('descripcion','estadoReclamo') 
+                VALUES (:descrip, :estado)");
+
+            $query->bindParam(':descrip', $descrip);
+            $query->bindParam(':estado', $estado);
+
+            $query->execute();
+            $idReclamo = $conn->lastInsertId();
+
+            $query = $conn->prepare("
+                INSERT INTO 
+                RealizaReclamo
+                ('idAbonado', 'idReclamo', 'idConexion', 'idVia', 'fechaReclamo')
+                VALUES (:abonado,:reclamo, :conexion, :via, :fecha)");
+
+            $query->bindParam(':abonado',  $idAbonado);
+            $query->bindParam(':reclamo',  $idReclamo);
+            $query->bindParam(':conexion', $idConexion);
+            $query->bindParam(':via',      $via);
+            $query->bindParam(':fecha',    $fecha);
+
+            $result = false;
+            if($query->execute()){
+                   $resultado = true;
+            }
+            return $this->render(sprintf('default/%s.html.twig', "reclamo_resultado"),
+                            array("resultado" => $resultado)); 
+        }
+        if($page = "listado"){
+
+            $reclamos = $this->getReclamos();
+
         }
         return null;
     }
@@ -220,6 +266,8 @@ class DefaultController extends Controller
         }
         $query = $em->createNativeQuery($sql_localidades, $rsm);
 
+        $query->setParameter(1, $zona);
+
         //Ejecuta y obtiene los resultados
         $localidades = $query->getResult();
 
@@ -227,25 +275,141 @@ class DefaultController extends Controller
         return $localidades;
     }
 
-    public function getReclamos($estado=""){
+    public function getReclamos($estado="",$idAbonado=""){
 
-        //idReclamo   descripcion estadoReclamo
-        return null;
+        $params = array();
+
+        $em = $this->getDoctrine()->getManager();
+        $rsm = new ResultSetMapping();
+        $rsm->addEntityResult('RealizaReclamo',  'ra');
+        $rsm->addFieldResult('ra', 'fechaReclamo', 'fechaReclamo');
+        $rsm->addJoinedEntityResult('Reclamo' , 'r', 'ra', 'idReclamo');
+        $rsm->addFieldResult('r', 'idReclamo',     'idReclamo');
+        $rsm->addFieldResult('r', 'descripcion',   'descripcion');
+        $rsm->addFieldResult('r', 'estadoReclamo', 'estadoReclamo');
+        $rsm->addJoinedEntityResult('Abonado' , 'a', 'ra', 'idAbonado');
+        $rsm->addFieldResult('a', 'idAbonado', 'idAbonado');
+        $rsm->addFieldResult('a', 'apeNom', 'apeNom');
+        $rsm->addFieldResult('a', 'email', 'email');
+        $rsm->addJoinedEntityResult('Localidad' , 'l', 'c', 'idLocalidad');
+        $rsm->addFieldResult('l', 'nombreLocalidad', 'nombreLocalidad');
+
+        // Consulta reclamos
+        $sql_reclamos= "
+                SELECT 
+                    r.idReclamo , r.descripcion , r.estadoReclamo
+                    ra.idConexion , ra.idVia,
+                    a.idAbonado, a.apeNom, a.email,
+                    l.nombreLocalidad
+                FROM RealizaReclamo ra
+                INNER JOIN Reclamo r ON ra.idReclamo = r.idReclamo
+                INNER JOIN Abonado a ON ra.idAbonado = a.idAbonado
+                INNER JOIN Conexion c ON ra.idConexion = c.idConexion
+                INNER JOIN Localidad l ON c.idLocalidad = l.idLocalidad";
+
+
+        // Filtros
+        if($estado !="" || $idAbonado != ""){
+
+            $sql_reclamos .= " WHERE ";
+
+            if($estado !=""){
+                $sql_reclamos .= " r.estadoReclamo = :estado";
+                array_push($params, array('estado' =>  $estado));
+            }
+            
+            if($idAbonado != ""){
+                $sql_reclamos .= ($estado!="")? " AND  " :"";
+                $sql_reclamos .= "a.idAbonado = :abonado";
+                array_push($params, array('abonado' =>  $idAbonado));
+            }
+        }
+
+        $query = $em->createNativeQuery($sql_reclamos, $rsm);
+
+        $query->setParameter($params);
+
+        return $query->getResult();
     }
+
 
     public function getZona($localidad=""){
+
+        $em = $this->getDoctrine()->getManager();
+
         //nombreZona
-        return null;   
+        $sql_zonas = "
+            SELECT z.nombreZona
+            FROM ZONA ";
+        $query = $em->createNativeQuery($sql_reclamos, $rsm);
+
+        return $query->getResult();   
     }
 
-    public function getConexiones($idAbonado , $estado = "", $estadoCuenta=""){
+    public function getConexiones($idAbonado , $estado = "", $esMoroso=""){
         //idConexion  direccion   fechaInstalacionReal    coordenadas esMoroso    nombreEstado    idServicio  idLocalidad idAbonado
-        return null;
+        $em = $this->getDoctrine()->getManager();
+
+        $params = array("abonado" => $idAbonado);
+
+        $sql_conexiones = "
+                SELECT 
+                FROM Conexion c
+                WHERE c.idAbonado =:abonado";
+
+        if($estado !=""){
+            $sql_conexiones .= " AND c.nombreEstado = :estadoConexion ";
+            array_push($params, array("estadoConexion" => $estado));
+        }
+        if($estadoCuenta !=""){
+            $sql_conexiones .= " AND c.esMoroso = :esMoroso ";   
+            array_push($params, array("esMoroso" => $esMoroso));
+        }
+        
+        $query = $em->createNativeQuery($sql_conexiones, $rsm);
+
+        $query->setParameter($params);
+
+        return $query->getResult();
     }
 
     public function getEquipoTecnico($zona = ""){
+        $em = $this->getDoctrine()->getManager();
         return null;
     }
+
+    public function getHojaDeRuta($fecha=""){
+
+        $em = $this->getDoctrine()->getManager();
+
+        //HojaRuta: idHojaRuta  fechaEmision
+
+        //ConexionEnHojaRuta: idConexion  idHojaRuta
+
+        //Trabajo: idTrabajo   idPrioridad estadoReclamo   idHojaRuta  idTarea
+
+        //Tarea: idTarea    nombreTarea
+
+        $sqlHojaRuta = "
+            SELECT 
+            h.idHojaRuta , h.fechaEmision,
+            ceh.idConexion
+            t.idPrioridad , t.estadoReclamo,
+            ta.nombreTarea
+
+            FROM HojaRuta h
+            INNER JOIN ConexionEnHojaRuta ceh ON h.idHojaRuta = ceh.idHojaRuta 
+            INNER JOIN Trabajo t ON h.idHojaRuta = t.idHojaRuta 
+            INNER JOIN Tarea ta ON t.idTarea = ta.idTarea";
+
+        if($fecha != ""){
+            $sqlHojaRuta .= "";  
+        }
+
+        return null;
+
+    }
+
 
 
 
@@ -273,7 +437,7 @@ class DefaultController extends Controller
     }
 
     /**
-    * Ajax Abonado
+    * Ajax Conexiones de Abonado
     *
     * @Route("/ajaxServicios/abonadoConexiones", name="ajax_abonado_conexiones")
     *
@@ -297,6 +461,62 @@ class DefaultController extends Controller
     }
 
     /**
+    * Ajax Reclamo
+    *
+    * @Route("/ajaxServicios/reclamoNuevo", name="ajax_reclamo_nuevo")
+    *
+    * @param Request $request
+    *
+    * @return Response
+    */
+
+    public function ajaxReclamoNuevo(Request $request){
+
+
+            //Parametros del nuevo reclamo
+            $idAbonado =    $request->get();
+            $idConexion =   $request->get();
+            $descripcion =  $request->get();
+            $via =          $request->get();
+            $fecha =        new \DateTime();
+            $estado =       "PENDIENTE_REVISIÓN"; //Hacer una clase abstracta como una enumeración
+
+
+            $conn = $this->getInstanciaConexion();
+            $query = $conn->prepare("
+                INSERT INTO 
+                Reclamo 
+                ('descripcion','estadoReclamo') 
+                VALUES (:descrip, :estado)");
+
+            $query->bindParam(':descrip', $descrip);
+            $query->bindParam(':estado', $estado);
+
+            $query->execute();
+            $idReclamo = $conn->lastInsertId();
+
+            $query = $conn->prepare("
+                INSERT INTO 
+                RealizaReclamo
+                ('idAbonado', 'idReclamo', 'idConexion', 'idVia', 'fechaReclamo')
+                VALUES (:abonado,:reclamo, :conexion, :via, :fecha)");
+
+            $query->bindParam(':abonado',  $idAbonado);
+            $query->bindParam(':reclamo',  $idReclamo);
+            $query->bindParam(':conexion', $idConexion);
+            $query->bindParam(':via',      $via);
+            $query->bindParam(':fecha',    $fecha);
+
+            if($query->execute()){
+                return new JsonResponse(array('result' => "true"));
+            }
+            return new JsonResponse(array('result' => "false"));
+
+
+            
+
+    }
+    /**
     * Ajax Reservas : Valida si un servicio está disponible para esa fecha y horario.
     *
     * @Route("/ajaxServicios/horarioServicio", name="ajax_diponibilidad_servicio")
@@ -319,6 +539,23 @@ class DefaultController extends Controller
       $jsonHorarios = $serializer->serialize($horarios, 'json');
 
       return new JsonResponse(array('horarios' => $jsonHabitaciones));  
+    }
+
+
+
+
+
+
+
+
+    /*
+        Funciones Auxiliares
+
+    */
+
+    public function getInstanciaConexion(){
+        return $this->getDoctrine()->getConnection();
+
     }
 
 }
