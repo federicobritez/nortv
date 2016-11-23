@@ -8,6 +8,7 @@ Instrucciones antes de que se rompan la cabeza al pedo:
 3 - reemplazar los archivos de este repo en el directorio norTv que creó Synfony.
 4 - Hacer un git pull para ver si tenemos la última versión de las modificaciones.
 5 - Probar. Para eso pararse en el directorio norTv y ejectutar:
+
 		php bin/console server:run
 
 		Indicará que el servidor esta corriendo y en que puerto. Seguro es el 8000

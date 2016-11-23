@@ -1,0 +1,81 @@
+
+
+
+Trabajo dentro de la H d ruta.  C/U con su estado
+
+Listado de trabajos AGRUPADOS por Hoja de Ruta. 
+
+
+
+===================================
+ABONADOS
+===================================
+Pre:
+	Debe haber servicios creados para poder mostrarlos
+	Localidades disponibles para la conexión. 
+	
+
+Post:
+	Un registro de abonado
+	Un contrato de conexión con las dos fechas de instalación y la vía por donde lo realizó. 
+	Una conexión con su correspondiente Servicio con estado pendiente. 
+
+Tablas involucradas: 
+	
+
+
+
+===================================
+RECLAMO
+===================================
+Pre:
+	El abonado debe exisitir.
+	Debe reclamarse sobre una conexión existente que pertenezca al usuario.
+	Datos validados
+
+Post:
+	Un registro en tabla reclamos con, numero , estado PENDIENTE_REVISIÓN, fecha , la descripción y la vía por donde se relizo. Relaciona Abonado con la conexión.
+
+
+
+
+===================================
+HOJA DE RUTA
+===================================
+
+Pre:
+	Servicios, Conexiones, EstadoConexion, Abonados, Zonas, Localidades, 
+	Equipos de técnicos, Técnicos, Reclamo, 
+
+	
+Cada hoja de ruta tiene una zona y un equipo de trabajo. 
+
+De acuerdo a los trabajo ser realiza la hoja de ruta.
+
+La hoja de ruta se genera:
+	Seleccionando todas las conexiones cuyo estado de conexion sea distinta de "Correcta".
+	
+	(no tiene que ver el reclamo. El reclamo es solo un forma de informar de problemas, pero el
+	que modifica el estao es el tipo de área técnica . Cuando pasa esto el reclamo debe cambiar de
+	estado. Finalmente el estado Procesado se llega cuando el técnico indica que la tarea asociada
+	a la conexión ha sido realizada)
+
+	Ordeno por : Prioridad (primero las conexiones nuevas/sin servicio + reclamo 
+							segundo sin servicio y sin reclamo
+							tercero conexiones con problemas)
+	y Zona 
+
+	Asigno Equipo técnico a cada hoja de ruta.
+
+
+
+Tabla hoja de ruta:
+
+NºHoja | Conexion | Zona | Estado Conexión | Prioridad | Equipo Técnico | 
+
+
+
+
+
+
+
