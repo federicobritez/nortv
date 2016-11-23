@@ -1,0 +1,129 @@
+{% extends 'panel_base.html.twig' %}
+
+{% block title %}{{ parent() }}{% endblock %}
+
+{% block body %} {{parent()}}
+
+
+<!--
+Para los reclamos realizados a través del formulario del sitio de la empresa deberá consignarse como mínimo: nombre y
+apellido del abonado, DNI del titular, número de cliente, dirección, una breve descripción del problema que presenta la
+conexión, correo electrónico. Se deberá guardar también fecha y hora del reclamo realizado. Luego de enviado el
+formulario, el reclamo estará en un estado de pendiente de revisión. Este reclamo debe ser enviado vía correo
+electrónico a una de las encargadas de la empresa, la cual realizará la verificación del estado de cuenta del cliente y el
+estado real de la conexión para que el reclamo pase a un estado de pendiente. Una vez verificado estos datos la
+encargada deberá enviar un mail al abonado indicando que su reclamo ha sido procesado.
+-->
+
+<div id="wrapper">
+        {% block sidebar %}{{parent()}}{% endblock%}
+
+        {% block page_content %}
+    <div id="page-wrapper">
+
+        <div class="container-fluid">
+
+            <!-- Page Heading -->
+            <div class="row">
+              <div class="col-lg-6">
+                <h2 class="page-header">
+                  Reclamos <small>Listado</small>
+                </h2>
+                <!--<ol class="breadcrumb">
+                            <li>
+                                <i class="fa fa-user"></i>  <a href="index.html">Abonados</a>
+                            </li>
+                            <li class="active">
+                                <i class="fa fa-table"></i> Listado
+                            </li>
+                        </ol>
+                -->
+              </div>
+            </div>
+            <!-- /.row -->
+
+            <div class="row">
+            	<div class="col-lg-10">
+            		<div class="row">
+                        <div class="col-lg-10">
+                            <!--<h2>Contextual Classes</h2>-->
+                            <div class="table-responsive">
+                                <table id="datatable-norTv" class="table table-bordered table-hover table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>NªCliente</th>
+                                            <th>Nombre</th>
+                                            <th>DNI</th>
+                                            <th>Conexion</th>
+                                            <th>Fecha</th>
+                                            <th>EstadoReclamo</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="danger">
+                                            <td>16-02313</td>
+                                            <td>Aldo Jose Ferreyra</td>
+                                            <td>16212312</td>
+                                            <td>Con-23123</td>
+                                            <td>14 Nov 2016</td>
+                                            <td>Pendiente de revisión</td>
+                                        </tr>
+                                        <tr class="warning">
+                                            <td>16-32121</td>
+                                            <td>Pedro Garcia</td>
+                                            <td>12784412</td>
+                                            <td>Con-1234</td>
+                                            <td>9 Nov 2016</td>
+                                            <td>Pendiente</td>
+                                        </tr>
+                                        <tr class="success">
+                                            <td>16-55323</td>
+                                            <td>Ana Martinez</td>
+                                            <td>27098234</td>
+                                            <td>Con-51231</td>
+                                            <td>2 Nov 2016</td>
+                                            <td>Procesado</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+			<!-- /.row -->            
+        </div>
+        <!-- /.container-fluid -->
+    </div>
+    <!-- /#page-wrapper -->
+    {% endblock %}
+</div>
+<!-- /#wrapper -->
+
+
+{% endblock %}
+
+{% block footer %}  {{ parent() }}  {% endblock %}
+
+{%block javascripts %}{{ parent() }}
+
+<script type="text/javascript">
+$(document).ready(function() {
+    $('#datatable-norTv').DataTable({
+        "language": {
+            "search": "Buscar _INPUT_",
+            "lengthMenu": "Ver _MENU_ registros",
+            "info": "Mostrando _START_ a _END_ de _TOTAL_ registros",
+            "paginate": {
+                "first" : "Primera",
+                "next" : "Siguiente",
+                "previous" : "Anterior",
+                "last" : "Última"
+            }                      
+        }
+    });
+
+
+} );
+</script>
+{% endblock %}

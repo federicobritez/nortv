@@ -1,0 +1,110 @@
+{% extends 'panel_base.html.twig' %}
+
+{% block title %}{{ parent() }}{% endblock %}
+
+{% block body %} {{parent()}}
+
+
+<!--
+Para los reclamos realizados a través del formulario del sitio de la empresa deberá consignarse como mínimo: nombre y
+apellido del abonado, DNI del titular, número de cliente, dirección, una breve descripción del problema que presenta la
+conexión, correo electrónico. Se deberá guardar también fecha y hora del reclamo realizado. Luego de enviado el
+formulario, el reclamo estará en un estado de pendiente de revisión. Este reclamo debe ser enviado vía correo
+electrónico a una de las encargadas de la empresa, la cual realizará la verificación del estado de cuenta del cliente y el
+estado real de la conexión para que el reclamo pase a un estado de pendiente. Una vez verificado estos datos la
+encargada deberá enviar un mail al abonado indicando que su reclamo ha sido procesado.
+
+-->
+
+<div id="wrapper">
+        {% block sidebar %}{{parent()}}{% endblock%}
+
+        {% block page_content %}
+    <div id="page-wrapper">
+
+        <div class="container-fluid">
+
+            <!-- Page Heading -->
+            <div class="row">
+              <div class="col-lg-6">
+                <h2 class="page-header">
+                  Reclamos <small>Abrir nuevo reclamo</small>
+                </h2>
+                <!--<ol class="breadcrumb">
+                            <li>
+                                <i class="fa fa-user"></i>  <a href="index.html">Abonados</a>
+                            </li>
+                            <li class="active">
+                                <i class="fa fa-table"></i> Listado
+                            </li>
+                        </ol>
+                -->
+              </div>
+            </div>
+            <!-- /.row -->
+
+            <div class="row">
+            	<div class="col-lg-10">
+            		<div class="well bs-component">
+              			<form class="form-horizontal">
+			                <fieldset>
+			                  <legend>Datos</legend>
+			                  <div class="form-group">
+			                    <label for="inputNombre" class="col-lg-2 control-label">Nombre</label>
+			                    <div class="col-lg-6">
+			                      <input type="text" class="form-control" id="inputNombre" placeholder="">
+			                    </div>
+			                  </div>
+			                  <div class="form-group">
+			                    <label for="inputApellido" class="col-lg-2 control-label">Apellido</label>
+			                    <div class="col-lg-6">
+			                      <input type="text" class="form-control" id="inputApellido" placeholder="">
+			                    </div>
+			                  </div>
+			                  <div class="form-group">
+			                    <div class="col-lg-10 col-lg-offset-2">
+			                      <button type="reset" class="btn btn-default">Cancelar</button>
+			                      <button type="submit" class="btn btn-primary">Aceptar</button>
+			                    </div>
+			                  </div>
+			                </fieldset>
+			            </form>
+			        </div>
+			    </div> 
+            </div>
+			<!-- /.row -->            
+        </div>
+        <!-- /.container-fluid -->
+    </div>
+    <!-- /#page-wrapper -->
+    {% endblock %}
+</div>
+<!-- /#wrapper -->
+
+
+{% endblock %}
+
+{% block footer %}  {{ parent() }}  {% endblock %}
+
+{%block javascripts %}{{ parent() }}
+
+<script type="text/javascript">
+$(document).ready(function() {
+    $('#datatable-norTv').DataTable({
+        "language": {
+            "search": "Buscar _INPUT_",
+            "lengthMenu": "Ver _MENU_ registros",
+            "info": "Mostrando _START_ a _END_ de _TOTAL_ registros",
+            "paginate": {
+                "first" : "Primera",
+                "next" : "Siguiente",
+                "previous" : "Anterior",
+                "last" : "Última"
+            }                      
+        }
+    });
+
+
+} );
+</script>
+{% endblock %}

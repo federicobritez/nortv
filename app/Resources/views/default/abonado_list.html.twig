@@ -14,57 +14,193 @@
 
             <!-- Page Heading -->
             <div class="row">
-              <div class="col-lg-6">
+              <div class="col-lg-10">
                 <h2 class="page-header">
-                  Abonado <small>Listado</small>
+                  Abonados <small>Registrados en el sistema</small>
+                  {{dump(debug)}}
                 </h2>
+                <!--<ol class="breadcrumb">
+                            <li>
+                                <i class="fa fa-user"></i>  <a href="index.html">Abonados</a>
+                            </li>
+                            <li class="active">
+                                <i class="fa fa-table"></i> Listado
+                            </li>
+                        </ol>
+                -->
               </div>
             </div>
             <!-- /.row -->
 
+            <!-- Crear abonado con formulario Modal-->
             <div class="row">
-                <div class="col-lg-10">
-                            <!--<h2>Contextual Classes</h2>-->
-                            <div class="table-responsive">
-                                <table id="datatable-norTv" class="table table-bordered table-hover table-striped">
-                                    <thead>
-                                        <tr>
-                                            <th>NªCliente</th>
-                                            <th>Nombre</th>
-                                            <th>Localidad</th>
-                                            <th>Servicio</th>
-                                            <th>EstadoConexion</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr class="success">
-                                            <td>16-02313</td>
-                                            <td>Aldo Jose Ferreyra</td>
-                                            <td>Barranqueras</td>
-                                            <td>Servcio Standard</td>
-                                            <td>Activa</td>
-                                        </tr>
-                                        <tr class="danger">
-                                            <td>16-32121</td>
-                                            <td>Pedro Garcia</td>
-                                            <td>Resistencia</td>
-                                            <td>Servcio Plus</td>
-                                            <td>Corte</td>
-                                        </tr>
-                                        <tr class="warning">
-                                            <td>16-55323</td>
-                                            <td>Ana Martinez</td>
-                                            <td>Tirol</td>
-                                            <td>Servcio Premium</td>
-                                            <td>Problemas</td>
-                                        </tr>
+                <div class="col-lg-10 ">
+                    <button type="submit" class="btn btn-default btn-primary" data-toggle="modal" data-target="#modalCrearAbonado">Crear Abonado</button>
+                    <dl>
+                    <div class="modal fade" id="modalCrearAbonado">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title">Datos del Abonado</h4>
+                            <p>Para ingresar un nuevo abonados debe llenar el siguente formulario</p>
+                          </div>
+                          <div class="modal-body">
+<form class="form-horizontal">
+                <fieldset>
+                 
+                  <div class="form-group">
+                    <label for="inputNombre" class="col-lg-4 control-label"> Nombre <span class="required">*</span></label>
+                    <div class="col-lg-5">
+                      <input type="text" class="form-control" id="inputNombre" placeholder="" required="true">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="inputApellido" class="col-lg-4 control-label">Apellido<span class="required">*</label>
+                    <div class="col-lg-5">
+                      <input type="text" class="form-control" id="inputApellido" placeholder="">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="inputDni" class="col-lg-4 control-label">DNI<span class="required">*</label>
+                    <div class="col-lg-5">
+                      <input type="text" class="form-control" id="inputDni" placeholder="">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="inputEmail" class="col-lg-4 control-label">Email<span class="required">*</label>
+                    <div class="col-lg-5">
+                      <input type="email" class="form-control" id="inputEmail" placeholder="">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="inputDireccion" class="col-lg-4 control-label">Dirección<span class="required">*</label>
+                    <div class="col-lg-5">
+                      <input type="text" class="form-control" id="inputDireccion" placeholder="">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="selectLocalidad" class="col-lg-4 control-label">Localidad<span class="required">*</label>
+                    <div class="col-lg-5">
+                      <select class="form-control" id="selectLocalidad">
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                        <option>5</option>
+                      </select>        
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="inputDireccion" class="col-lg-4 control-label">Telefono Fijo</label>
+                    <div class="col-lg-5">
+                      <input type="text" class="form-control" id="inputTelFijo" placeholder="">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="inputDireccion" class="col-lg-4 control-label">Telefono Celular</label>
+                    <div class="col-lg-5">
+                      <input type="text" class="form-control" id="inputTelCelular" placeholder="">
+                    </div>
+                  </div>
 
-                                        
-                                    </tbody>
-                                </table>
-                            </div>
+
+                  <div class="form-group">
+                    <label for="inputDireccion" class="col-lg-4 control-label">Fecha Instalacion <span class="required">*</label>
+                    <div class="col-lg-5">
+                      <div class='input-group date' id='datetimepicker1'>
+                        <input type='text' class="form-control" />
+                        <span class="input-group-addon">
+                        <span class="fa fa-calendar">
+                        </span>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="inputDireccion" class="col-lg-4 control-label">Fecha Instalacion <span class="required">*</label>
+                    <div class="col-lg-5">
+                      <div class='input-group date' id='datetimepicker2'>
+                        <input type='text' class="form-control" />
+                        <span class="input-group-addon">
+                        <span class="fa fa-calendar">
+                        </span>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary">Guardar Cambios</button>
+                  </div>
+
+                    
+                  <!--<div class="form-group">
+                    <div class="col-lg-10 col-lg-offset-2">
+                      <button type="reset" class="btn btn-default">Cancelar</button>
+                      <button type="submit" class="btn btn-primary">Aceptar</button>
+                    </div>
+                  </div>-->
+                </fieldset>
+              </form>                                
+                            
+                          </div>
+                          
+                        </div>
+                      </div>
+                    </div>
                 </div>
             </div>
+            <!--/.row formulario Modal -->
+
+
+            <!-- Tabla de Abonados -->
+            <div class="row">
+                <div class="col-lg-10">
+                    <!--<h2>Contextual Classes</h2>-->
+                    <div class="table-responsive">
+                        <table id="datatable-norTv" class="table table-bordered table-hover table-striped">
+                            <thead>
+                                <tr>
+                                    <th>NªCliente</th>
+                                    <th>Nombre</th>
+                                    <th>Localidad</th>
+                                    <th>Servicio</th>
+                                    <th>EstadoConexion</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="success">
+                                    <td>16-02313</td>
+                                    <td>Aldo Jose Ferreyra</td>
+                                    <td>Barranqueras</td>
+                                    <td>Servcio Standard</td>
+                                    <td>Activa</td>
+                                </tr>
+                                <tr class="danger">
+                                    <td>16-32121</td>
+                                    <td>Pedro Garcia</td>
+                                    <td>Resistencia</td>
+                                    <td>Servcio Plus</td>
+                                    <td>Corte</td>
+                                </tr>
+                                <tr class="warning">
+                                    <td>16-55323</td>
+                                    <td>Ana Martinez</td>
+                                    <td>Tirol</td>
+                                    <td>Servcio Premium</td>
+                                    <td>Problemas</td>
+                                </tr>
+
+                                
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <!--/.row Tabla Abonados -->
         </div>
         <!-- /.container-fluid -->
     </div>
@@ -98,5 +234,38 @@ $(document).ready(function() {
 
 
 } );
+
+$(function () {
+            $('#datetimepicker1').datetimepicker({
+                daysOfWeekDisabled: [0, 6], //Deshabilita Sabado y domingo
+                sideBySide: true, // Muesta el calendario y la hora juntos
+                format: 'D/ MM /YYYY HH:mm' // Formato de la fecha en el input
+            });
+
+            $('#datetimepicker2').datetimepicker({
+                daysOfWeekDisabled: [0, 6], //Deshabilita Sabado y domingo
+                sideBySide: true, // Muesta el calendario y la hora juntos
+                format: 'D/ MM /YYYY HH:mm' // Formato de la fecha en el input
+            });
+
+            //Solo puede elegir una fecha futura·
+            $('#datetimepicker1').data("DateTimePicker").minDate(this.useCurrent);
+            //Solo puede elegir una fecha futura·
+            $('#datetimepicker2').data("DateTimePicker").minDate(this.useCurrent);
+
+            //Solo puede elegir una fecha posterior a la fecha 1 
+           
+            $("#datetimepicker1").on("dp.change", function (e) {
+
+                  //TODO. CONFIGURAR PARA QUE EL PROXIMO DIA LABORAR
+                //console.debug(e.date);
+                //var day = e.date;
+                //day.add(1, 'weeks')
+                
+              $('#datetimepicker2').data("DateTimePicker").minDate(e.date);
+            });
+            
+
+        });
 </script>
 {% endblock %}
