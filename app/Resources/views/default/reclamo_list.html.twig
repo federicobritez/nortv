@@ -28,7 +28,7 @@ encargada deberá enviar un mail al abonado indicando que su reclamo ha sido pro
               <div class="col-lg-6">
                 <h2 class="page-header">
                   Reclamos <small>Listado</small>
-                  {{dump(reclamos)}}
+                  {{ dump(reclamos) }}
                 </h2>
                 <!--<ol class="breadcrumb">
                             <li>
@@ -68,42 +68,18 @@ encargada deberá enviar un mail al abonado indicando que su reclamo ha sido pro
                                      <tr class="{{classRow[reclamo.estadoReclamo|upper]}}">
 
                                       <td>{{reclamo.idReclamo}}</td>
+                                      <td>{{reclamo.fechaReclamo|date("d/m/Y h:m") }}</td>
                                       <td>{{reclamo.idAbonado}}</td>
                                       <td>{{reclamo.apellidoNombre}}</td>
                                       <td>{{reclamo.idConexion}}</td>
                                       <td>{{reclamo.nombreLocalidad}}</td>
-                                      <td>{{reclamo.idViaComunicacion}}</td>
+                                      <td>{{reclamo.nombreViaComunicacion}}</td>
                                       <td>{{reclamo.estadoReclamo}}</td>
                                       <td>VA UN BOTON</td>
+                                      <td>...</td>
                                     </tr>
                                     {% endfor %}
-                                        <tr class="danger">
-                                            <td>16-02313</td>
-                                            <td>Aldo Jose Ferreyra</td>
-                                            <td>16212312</td>
-                                            <td>Con-23123</td>
-                                            <td>14 Nov 2016</td>
-                                            <td>Web</td>
-                                            <td>Pendiente de revisión</td>
-                                        </tr>
-                                        <tr class="warning">
-                                            <td>16-32121</td>
-                                            <td>Pedro Garcia</td>
-                                            <td>12784412</td>
-                                            <td>Con-1234</td>
-                                            <td>9 Nov 2016</td>
-                                            <td>Telefonica</td>
-                                            <td>Pendiente</td>
-                                        </tr>
-                                        <tr class="success">
-                                            <td>16-55323</td>
-                                            <td>Ana Martinez</td>
-                                            <td>27098234</td>
-                                            <td>Con-51231</td>
-                                            <td>2 Nov 2016</td>
-                                            <td>Web</td>
-                                            <td>Procesado</td>
-                                        </tr>
+                                       
                                     </tbody>
                                 </table>
                             </div>

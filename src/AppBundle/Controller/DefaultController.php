@@ -113,7 +113,7 @@ class DefaultController extends Controller
 
             $reclamos = $this->getReclamos();
 
-            $arrayClassRow = array("CERRADO" => "success", "PENDIENTE" => "warning" , "PENDIENTE_REVISION" => "danger");
+            $arrayClassRow = array("CERRADO" => "success", "PENDIENTE" => "warning" , "PENDIENTE DE REVISION" => "danger");
 
             return $this->render(sprintf('default/%s.html.twig', "reclamo_list"),
                             array("reclamos" => $reclamos, "classRow" => $arrayClassRow)); 
@@ -304,7 +304,7 @@ class DefaultController extends Controller
     }
 
     /**
-     * Devuelve todo los abonados o uno si se especifica el filtro de idAbonado
+     * Devuelve todo los reclamos o uno si se especifica el filtro de estado y/o un abonado
      *
      * @param string                           $estado           estado de Reclamo
      * @param integer                          $idAbonado        ID del Abonado
@@ -357,13 +357,15 @@ class DefaultController extends Controller
                     r.idReclamo , r.descripcion , r.estadoReclamo,
                     ra.idConexion , ra.idViaComunicacion, ra.fechaReclamo,
                     a.idAbonado, a.apellidoNombre, a.email,
-                    c.idConexion, c.idLocalidad,
-                    l.nombreLocalidad
+                    c.idConexion, c.idLocalidad , c.direccion,
+                    l.nombreLocalidad,
+                    v.nombreViaComunicacion
                 FROM ReclamosRealizado ra
-                INNER JOIN Reclamo r ON ra.idReclamo = r.idReclamo
-                INNER JOIN Abonado a ON ra.idAbonado = a.idAbonado
-                INNER JOIN Conexion c ON ra.idConexion = c.idConexion
-                INNER JOIN Localidad l ON c.idLocalidad = l.idLocalidad;"; //OK
+                INNER JOIN Reclamo   As r ON ra.idReclamo = r.idReclamo
+                INNER JOIN Abonado   As a ON ra.idAbonado = a.idAbonado
+                INNER JOIN Conexion  As c ON ra.idConexion = c.idConexion
+                INNER JOIN Localidad As l ON c.idLocalidad = l.idLocalidad 
+                INNER JOIN ViaComunicacion As v ON ra.idViaComunicacion = v.idViaComunicacion "; //OK
 
 
         // Filtros
