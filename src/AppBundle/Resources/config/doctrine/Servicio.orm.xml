@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="AppBundle\Entity\Servicio" table="Servicio">
+    <id name="idservicio" type="integer" column="idServicio">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="costo" type="float" column="costo" precision="10" scale="0" nullable="true"/>
+    <field name="cantcanales" type="integer" column="cantCanales" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="cantcanaleshd" type="integer" column="cantCanalesHD" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="cantcanalespelicula" type="integer" column="cantCanalesPelicula" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="espremium" type="integer" column="esPremium" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="esplus" type="integer" column="esPlus" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="esestandar" type="integer" column="esEstandar" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="nombreservicio" type="string" column="nombreServicio" length="45" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+  </entity>
+</doctrine-mapping>

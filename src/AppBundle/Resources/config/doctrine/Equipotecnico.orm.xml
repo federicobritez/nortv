@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="AppBundle\Entity\Equipotecnico" table="EquipoTecnico">
+    <indexes>
+      <index name="fk_EquipoTecnico_Zona1_idx" columns="idZona"/>
+    </indexes>
+    <id name="idequipotecnico" type="integer" column="idEquipoTecnico">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="vehiculoasignado" type="string" column="vehiculoAsignado" length="45" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <many-to-one field="idzona" target-entity="Zona" fetch="LAZY">
+      <join-columns>
+        <join-column name="idZona" referenced-column-name="idZona"/>
+      </join-columns>
+    </many-to-one>
+  </entity>
+</doctrine-mapping>

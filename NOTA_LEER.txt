@@ -22,3 +22,24 @@ la base de datos que fueron pasados por whataaaapp.
 
 
 		
+
+
+/***** Pasos para importar desde CSV a tablas ya creadas ********/
+
+1 - Abirl el Excel y pararse en la pestaña de la tabla q se quiere exportar.
+	REQUISITOS:
+		* Las columans deben tener el mismo orden que el esquema de la tabla.
+		* Las primer fila es el nombre de los campos. No importa si no coincide con el de la tabla, al importar será ignorada.
+
+2 - Guardar como CSV : FORMATO : SEPARADO DE CAMPO -> , | SEPARADOR DE TEXTO -> " |  ENTRECOMILLAR TODAS LA CELDAS DE TEXTO
+3 - Abrir la consola de MySQL o el editor de consultas de WorkBrenck .- Asegurarse de que se esta trabajando en al db correcta
+4 - Ejecutar el siguiente comando:
+
+
+	LOAD DATA INFILE '/home/federico/projects/norTv/Data/ConexionEnHojaRuta.csv' INTO TABLE ConexionEnHojaRuta  FIELDS TERMINATED BY ',' ENCLOSED BY '"'   LINES TERMINATED BY '\n'   IGNORE 1 LINES;
+
+	Obviamente cambiar el PATH al archivo y cambiar el nombre de la tabla. 
+
+5 - Hace un select para chequear que se actualizó la tabla.
+
+

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="AppBundle\Entity\Reclamosrealizado" table="ReclamosRealizado">
+    <indexes>
+      <index name="fk_ReclamosRealizado_Abonado1_idx" columns="idAbonado"/>
+      <index name="fk_ReclamosRealizado_Conexion1_idx" columns="idConexion"/>
+      <index name="fk_ReclamosRealizado_ViaComunicacion1_idx" columns="idViaComunicacion"/>
+      <index name="fk_ReclamosRealizado_Reclamo1_idx" columns="idReclamo"/>
+    </indexes>
+    <id name="idreclamosrealizado" type="integer" column="idReclamosRealizado">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="fechareclamo" type="datetime" column="fechaReclamo" nullable="false"/>
+    <many-to-one field="idreclamo" target-entity="Reclamo" fetch="LAZY">
+      <join-columns>
+        <join-column name="idReclamo" referenced-column-name="idReclamo"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="idviacomunicacion" target-entity="Viacomunicacion" fetch="LAZY">
+      <join-columns>
+        <join-column name="idViaComunicacion" referenced-column-name="idViaComunicacion"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="idconexion" target-entity="Conexion" fetch="LAZY">
+      <join-columns>
+        <join-column name="idConexion" referenced-column-name="idConexion"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="idabonado" target-entity="Abonado" fetch="LAZY">
+      <join-columns>
+        <join-column name="idAbonado" referenced-column-name="idAbonado"/>
+      </join-columns>
+    </many-to-one>
+  </entity>
+</doctrine-mapping>

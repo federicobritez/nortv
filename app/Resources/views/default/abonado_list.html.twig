@@ -166,34 +166,26 @@
                                 <tr>
                                     <th>NªCliente</th>
                                     <th>Nombre</th>
-                                    <th>Localidad</th>
-                                    <th>Servicio</th>
-                                    <th>EstadoConexion</th>
+                                    <th>Direccion</th>
+                                    <th>Telefono</th>
+                                    <th>Celular</th>
+                                    <th>Email</th>
+                                    <th>Servicios</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr class="success">
-                                    <td>16-02313</td>
-                                    <td>Aldo Jose Ferreyra</td>
-                                    <td>Barranqueras</td>
-                                    <td>Servcio Standard</td>
-                                    <td>Activa</td>
-                                </tr>
-                                <tr class="danger">
-                                    <td>16-32121</td>
-                                    <td>Pedro Garcia</td>
-                                    <td>Resistencia</td>
-                                    <td>Servcio Plus</td>
-                                    <td>Corte</td>
-                                </tr>
-                                <tr class="warning">
-                                    <td>16-55323</td>
-                                    <td>Ana Martinez</td>
-                                    <td>Tirol</td>
-                                    <td>Servcio Premium</td>
-                                    <td>Problemas</td>
-                                </tr>
-
+                              
+                                {% for abonado in abonados %}
+                                  <tr>
+                                      <td>{{abonado.idabonado}}</td>
+                                      <td>{{abonado.apellidonombre}}</td>
+                                      <td>{{abonado.direccion}}</td>
+                                      <td>{{abonado.telefono}}</td>
+                                      <td>{{abonado.celular}}</td>
+                                      <td>{{abonado.email}}</td>
+                                      <td></td>
+                                  </tr>
+                                {% endfor %}
                                 
                             </tbody>
                         </table>

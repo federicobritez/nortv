@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="AppBundle\Entity\Trabajorealizado" table="TrabajoRealizado">
+    <indexes>
+      <index name="fk_TrabajoRealizado_EquipoTecnico1_idx" columns="idEquipoTecnico"/>
+      <index name="fk_TrabajoRealizado_Insumo1_idx" columns="idInsumo"/>
+      <index name="fk_TrabajoRealizado_Trabajo1_idx" columns="idTrabajo"/>
+    </indexes>
+    <id name="idequipotecnico" association-key="true"/>
+    <id name="idinsumo" association-key="true"/>
+    <id name="idtrabajo" association-key="true"/>
+    <field name="cantinsumos" type="integer" column="cantInsumos" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="fechatrabajo" type="datetime" column="fechaTrabajo" nullable="false"/>
+    <field name="observaciones" type="string" column="observaciones" length="45" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <one-to-one field="idtrabajo" target-entity="Trabajo" fetch="LAZY">
+      <join-columns>
+        <join-column name="idTrabajo" referenced-column-name="idTrabajo"/>
+      </join-columns>
+    </one-to-one>
+    <one-to-one field="idinsumo" target-entity="Insumo" fetch="LAZY">
+      <join-columns>
+        <join-column name="idInsumo" referenced-column-name="idInsumo"/>
+      </join-columns>
+    </one-to-one>
+    <one-to-one field="idequipotecnico" target-entity="Equipotecnico" fetch="LAZY">
+      <join-columns>
+        <join-column name="idEquipoTecnico" referenced-column-name="idEquipoTecnico"/>
+      </join-columns>
+    </one-to-one>
+  </entity>
+</doctrine-mapping>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="AppBundle\Entity\Eventoypeliculas" table="EventoYPeliculas">
+    <id name="idevento" type="integer" column="idEvento">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="nombreevento" type="string" column="nombreEvento" length="45" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="fechainicio" type="datetime" column="fechaInicio" nullable="false"/>
+    <field name="costoevento" type="float" column="costoEvento" precision="10" scale="0" nullable="true"/>
+    <many-to-many field="idabonado" target-entity="Abonado" mapped-by="idevento" fetch="LAZY"/>
+  </entity>
+</doctrine-mapping>

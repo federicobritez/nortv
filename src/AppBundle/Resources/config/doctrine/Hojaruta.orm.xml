@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="AppBundle\Entity\Hojaruta" table="HojaRuta">
+    <id name="idhojaruta" type="integer" column="idHojaRuta">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="fechaemision" type="datetime" column="fechaEmision" nullable="false"/>
+    <many-to-many field="idconexion" target-entity="Conexion" mapped-by="idhojaruta" fetch="LAZY"/>
+  </entity>
+</doctrine-mapping>

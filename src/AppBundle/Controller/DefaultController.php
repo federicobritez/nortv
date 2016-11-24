@@ -42,17 +42,18 @@ class DefaultController extends Controller
             /* Las localidades disponibles*/
             $localidades = $this->getLocalidades();
 
-            return $this->render(sprintf('default/%s.html.twig', "abonado_list"),
+            return $this->render(sprintf('default/%s.html.twig', "abonado_form"),
                             array("servicios"   => $servicios,
                                   "localidades" => $localidades)); 
 
         }
 
         if($page == "listado"){
-            $abonados = $this->getInstanciaConexion();//$this->getAbonados();
+
+            $abonados = $this->getAbonados();//$this->getInstanciaConexion();//$this->getAbonados();
 
             return $this->render(sprintf('default/%s.html.twig', "abonado_list"),
-                            array("debug" => $abonados)); 
+                            array("abonados" => $abonados,"debug"=>$abonados)); 
         }
         // replace this example code with whatever you need
         return $this->render('default/s'.$page.'.html.twig', [
@@ -67,7 +68,7 @@ class DefaultController extends Controller
     public function reclamoAction(Request $request,$page="index")
     {
         //Un registro en tabla reclamos con, numero , estado PENDIENTE_REVISIÓN, fecha , la descripción y la vía por donde se relizo. Relaciona Abonado con la conexión.
-        if($page = "nuevo") {
+        if($page == "nuevo") {
             //Parametros del nuevo reclamo
             $idAbonado =    $request->get();
             $idConexion =   $request->get();
@@ -75,7 +76,6 @@ class DefaultController extends Controller
             $via =          $request->get();
             $fecha =        new \DateTime();
             $estado =       "PENDIENTE_REVISIÓN"; //Hacer una clase abstracta como una enumeración
-
 
             $conn = $this->getInstanciaConexion();
             $query = $conn->prepare("
@@ -106,12 +106,18 @@ class DefaultController extends Controller
             if($query->execute()){
                    $resultado = true;
             }
-            return $this->render(sprintf('default/%s.html.twig', "reclamo_resultado"),
+            return $this->render(sprintf('default/%s.html.twig', "reclamo_result"),
                             array("resultado" => $resultado)); 
         }
-        if($page = "listado"){
+        if($page == "listado"){
 
             $reclamos = $this->getReclamos();
+
+            $arrayClassRow = array("CERRADO" => "success", "PENDIENTE" => "warning" , "PENDIENTE_REVISION" => "danger");
+
+            return $this->render(sprintf('default/%s.html.twig', "reclamo_list"),
+                            array("reclamos" => $reclamos, "classRow" => $arrayClassRow)); 
+
 
         }
         return null;
@@ -154,6 +160,14 @@ class DefaultController extends Controller
         return $abonados;
     }
 
+    /**
+     * Devuelve todo los abonados o uno si se especifica el filtro de idAbonado
+     *
+     * @param interger                           $id           ID del Abonado
+     *
+     * @return array|null 
+     */
+
 
 
     public function getAbonados($id = ""){
@@ -165,9 +179,9 @@ class DefaultController extends Controller
         //SQL nativo y traer los datos como objeto. 
         $rsm = new ResultSetMapping();
         $rsm->addEntityResult('AppBundle:Abonado', 'a');
-        $rsm->addFieldResult('a', 'idAbonado', 'idAbonado');  
+        $rsm->addFieldResult('a', 'idAbonado', 'idabonado');  
         $rsm->addFieldResult('a', 'dni', 'dni');
-        $rsm->addFieldResult('a', 'apeNom', 'apeNom');
+        $rsm->addFieldResult('a', 'apellidoNombre', 'apellidonombre');
         $rsm->addFieldResult('a', 'direccion', 'direccion');
         $rsm->addFieldResult('a', 'telefono', 'telefono');
         $rsm->addFieldResult('a', 'telefono', 'telefono');
@@ -176,9 +190,9 @@ class DefaultController extends Controller
 
         // Los abonados 
         $sql_abonado ='SELECT 
-                            a.idAbonado, a.dni, a.apeNom,  
+                            a.idAbonado, a.dni, a.apellidoNombre,  
                             a.direccion, a.telefono, a.celular, a.email  
-                        FROM actor a';
+                        FROM Abonado a'; //OK
 
         // Filtro, si existe.
         if($id != ""){
@@ -195,6 +209,13 @@ class DefaultController extends Controller
         return $abonados;
     }
 
+    /**
+     * Devuelve todo los servicios o uno si se especifica el filtro de tipo
+     *
+     * @param string                           $tipo           Tipo Servicio
+     *
+     * @return array|null 
+     */
     public function getServicios($tipo=""){
 
         /* Servicio STD - Plus - Premium : Una sola tabla*/
@@ -202,64 +223,71 @@ class DefaultController extends Controller
 
         $sql_servicios = "
             SELECT 
-                s.nomServicio , s.costo,s.cantCanales,
-                s.canalesHD,s.canalesPeliculas,s.esPremium, s.esPlus, s.esEstandar 
-            FROM Servicio s";
+                s.idServicio, s.nombreServicio , s.costo, s.cantCanales,
+                s.cantCanalesHD, s.cantCanalesPelicula,s.esPremium, s.esPlus, s.esEstandar 
+            FROM Servicio s "; //OK
 
         $rsm = new ResultSetMapping();
         $rsm->addEntityResult('AppBundle:Servicio', 's');
-        $rsm->addFieldResult('s', 'idServicio', 'idServicio');
-        $rsm->addFieldResult('s', 'nomServicio', 'nomServicio');
+        $rsm->addFieldResult('s', 'idServicio', 'idservicio');
+        $rsm->addFieldResult('s', 'nomServicio', 'nombreservicio');
         $rsm->addFieldResult('s', 'costo', 'costo');
-        $rsm->addFieldResult('s', 'cantCanales', 'cantCanales');
-        $rsm->addFieldResult('s', 'cantCanalesHD', 'cantCanalesHD');
-        $rsm->addFieldResult('s', 'cantCanalesPeliculas', 'cantCanalesPeliculas');
-        $rsm->addFieldResult('s', 'esEstandar', 'esEstandar');
-        $rsm->addFieldResult('s', 'esPlus', 'esPlus');
-        $rsm->addFieldResult('s', 'esPremium', 'esPremium');
+        $rsm->addFieldResult('s', 'cantCanales', 'cantcanales');
+        $rsm->addFieldResult('s', 'cantCanalesHD', 'cantcanaleshd');
+        $rsm->addFieldResult('s', 'cantCanalesPelicula', 'cantcanalespelicula');
+        $rsm->addFieldResult('s', 'esEstandar', 'esestandar');
+        $rsm->addFieldResult('s', 'esPlus', 'esplus');
+        $rsm->addFieldResult('s', 'esPremium', 'espremium');
 
         if($tipo !=""){
             $sql_servicios .= " WHERE ";
             switch ($tipo) {
                 case "ESTANDAR":
-                    $sql_servicios .= " s.esEstandar = TRUE";
+                    $sql_servicios .= " s.esEstandar = 1";
                     break;
                 case "PLUS":
-                    $sql_servicios .= " s.esPlus = TRUE";
+                    $sql_servicios .= " s.esPlus = 1";
                     break;
                 case "PREMIUM":
-                    $sql_servicios .= " s.esPremium = TRUE";
+                    $sql_servicios .= " s.esPremium = 1";
                     break;
                 default:
-                    $sql_servicios .= " s.esEstandar = TRUE";
+                    $sql_servicios .= " s.esEstandar = 1";
                     break;
             }
         }
         $query = $em->createNativeQuery($sql_servicios, $rsm);
 
         //Ejecuta y obtiene los resultados
-        $servicios = $query->getResult();
-        return $servicios;
+        return $query->getResult();
 
     }
+
+    /**
+     * Devuelve todas las localidades o filtradas por Zona 
+     *
+     * @param string                           $zona           Nombre de la zona
+     *
+     * @return array|null 
+     */
 
     public  function getLocalidades($zona=""){
 
         $em = $this->getDoctrine()->getManager();
         $rsm = new ResultSetMapping();
-        $rsm->addEntityResult('Localidad',  'l');
-        $rsm->addFieldResult('l', 'idLocalidad',     'idLocalidad');
-        $rsm->addFieldResult('l', 'nombreLocalidad', 'nombreLocalidadme');
-        $rsm->addFieldResult('l', 'codigoPostal',    'codigoPostal');
-        $rsm->addFieldResult('l', 'nombreZona',      'nombreZona');
-        $rsm->addJoinedEntityResult('Zona' , 'z', 'l', 'Localidad');
-        $rsm->addFieldResult('z', 'nombreZona', 'nombreZona');
+        $rsm->addEntityResult('AppBundle:Localidad',  'l');
+        $rsm->addFieldResult('l', 'idLocalidad',     'idlocalidad');
+        $rsm->addFieldResult('l', 'nombreLocalidad', 'nombrelocalidad');
+        $rsm->addFieldResult('l', 'codigoPostal',    'codigopostal');
+        $rsm->addFieldResult('l', 'idZona',      'idzona');
+        $rsm->addJoinedEntityResult('AppBundle:Zona' , 'z', 'l', 'idzona');
+        $rsm->addFieldResult('z', 'nombreZona', 'nombrezona');
 
         $sql_localidades = "
                 SELECT 
-                    l.idLocalidad, l.nombreLocalidad, l.codigoPostal, z.nombreZona 
-                FROM Localidad 
-                INNER JOIN Zona z  ON l.nombreZona = z.nombreZona";
+                    l.idLocalidad, l.nombreLocalidad, l.codigoPostal, z.nombre
+                    FROM Localidad l
+                    INNER JOIN Zona z  ON l.idZona = z.idZona "; //OK
 
         if($zona !=""){
             $sql_localidades .= " WHERE l.nombreZona = ?";
@@ -275,37 +303,67 @@ class DefaultController extends Controller
         return $localidades;
     }
 
+    /**
+     * Devuelve todo los abonados o uno si se especifica el filtro de idAbonado
+     *
+     * @param string                           $estado           estado de Reclamo
+     * @param integer                          $idAbonado        ID del Abonado
+     *
+     * @return array|null 
+     */
+
     public function getReclamos($estado="",$idAbonado=""){
 
         $params = array();
 
+        /*
+        Para los Join no vamos a usar el Resulset debido a que confunde mucho y demanda 
+        mucha atención con la implementacion. 
+        Usaremos directamente el el driver PDO que Doctrine ya instanció.
+
+
         $em = $this->getDoctrine()->getManager();
         $rsm = new ResultSetMapping();
-        $rsm->addEntityResult('RealizaReclamo',  'ra');
-        $rsm->addFieldResult('ra', 'fechaReclamo', 'fechaReclamo');
-        $rsm->addJoinedEntityResult('Reclamo' , 'r', 'ra', 'idReclamo');
-        $rsm->addFieldResult('r', 'idReclamo',     'idReclamo');
+        $rsm->addEntityResult('AppBundle:Reclamosrealizado',  'ra');
+        $rsm->addFieldResult('ra', 'idConexion', 'idconexion');
+        $rsm->addFieldResult('ra', 'idViaComunicacion', 'idviacomunicacion');
+        $rsm->addFieldResult('ra', 'fechaReclamo', 'fechareclamo');
+        $rsm->addFieldResult('ra', 'idReclamo', 'idreclamo');
+
+        $rsm->addJoinedEntityResult('AppBundle:Reclamo' , 'r', 'ra', 'idreclamo');
+        $rsm->addFieldResult('r', 'idReclamo',     'idreclamo');
         $rsm->addFieldResult('r', 'descripcion',   'descripcion');
-        $rsm->addFieldResult('r', 'estadoReclamo', 'estadoReclamo');
-        $rsm->addJoinedEntityResult('Abonado' , 'a', 'ra', 'idAbonado');
-        $rsm->addFieldResult('a', 'idAbonado', 'idAbonado');
-        $rsm->addFieldResult('a', 'apeNom', 'apeNom');
+        $rsm->addFieldResult('r', 'estadoReclamo', 'estadoreclamo');
+
+        $rsm->addJoinedEntityResult('AppBundle:Abonado' , 'a', 'ra', 'idabonado');
+        $rsm->addFieldResult('a', 'idAbonado', 'idabonado');
+        $rsm->addFieldResult('a', 'apeNom', 'apellidonombre');
         $rsm->addFieldResult('a', 'email', 'email');
-        $rsm->addJoinedEntityResult('Localidad' , 'l', 'c', 'idLocalidad');
-        $rsm->addFieldResult('l', 'nombreLocalidad', 'nombreLocalidad');
+
+        $rsm->addJoinedEntityResult('AppBundle:Conexion' , 'c', 'ra', 'idconexion');
+        $rsm->addFieldResult('c', 'idConexion', 'idconexion');
+        $rsm->addFieldResult('c', 'idLocalidad', 'idlocalidad');
+
+        $rsm->addJoinedEntityResult('AppBundle:Localidad' , 'l', 'c', 'idlocalidad');
+        $rsm->addFieldResult('l', 'nombreLocalidad', 'nombrelocalidad');
+        */
+
+        $conn = $this->getInstanciaConexion();
+
 
         // Consulta reclamos
         $sql_reclamos= "
                 SELECT 
-                    r.idReclamo , r.descripcion , r.estadoReclamo
-                    ra.idConexion , ra.idVia,
-                    a.idAbonado, a.apeNom, a.email,
+                    r.idReclamo , r.descripcion , r.estadoReclamo,
+                    ra.idConexion , ra.idViaComunicacion, ra.fechaReclamo,
+                    a.idAbonado, a.apellidoNombre, a.email,
+                    c.idConexion, c.idLocalidad,
                     l.nombreLocalidad
-                FROM RealizaReclamo ra
+                FROM ReclamosRealizado ra
                 INNER JOIN Reclamo r ON ra.idReclamo = r.idReclamo
                 INNER JOIN Abonado a ON ra.idAbonado = a.idAbonado
                 INNER JOIN Conexion c ON ra.idConexion = c.idConexion
-                INNER JOIN Localidad l ON c.idLocalidad = l.idLocalidad";
+                INNER JOIN Localidad l ON c.idLocalidad = l.idLocalidad;"; //OK
 
 
         // Filtros
@@ -325,26 +383,47 @@ class DefaultController extends Controller
             }
         }
 
-        $query = $em->createNativeQuery($sql_reclamos, $rsm);
+        $query = $conn->prepare($sql_reclamos);
+        //$query = $em->createNativeQuery($sql_reclamos, $rsm);
 
-        $query->setParameter($params);
+        //$query->setParameter($params);
 
-        return $query->getResult();
+        //return $query->getResult();
+        $query->execute();
+        return $query->fetchAll();
     }
 
+    /**
+     * Devuelve las zonas o filtra las zonas a la que pertence la localidad
+     *
+     * @param int                           $idLocalidad         Localidad buscada
+     *
+     * @return array|null 
+     */
 
-    public function getZona($localidad=""){
+    public function getZona($idLocalidad=""){
 
         $em = $this->getDoctrine()->getManager();
 
         //nombreZona
         $sql_zonas = "
-            SELECT z.nombreZona
+            SELECT z.nombre
             FROM ZONA ";
+
         $query = $em->createNativeQuery($sql_reclamos, $rsm);
 
         return $query->getResult();   
     }
+
+    /**
+     * Devuelve las conexiones de un abonado, filtrado por estado y/o morosidad
+     *
+     * @param integer                          $idAbonado        ID del Abonado
+     * @param string                           $nombreEstado     nombreEstado Conexion
+     * @param boolean                          $esMoroso         
+     *
+     * @return array|null 
+     */
 
     public function getConexiones($idAbonado , $estado = "", $esMoroso=""){
         //idConexion  direccion   fechaInstalacionReal    coordenadas esMoroso    nombreEstado    idServicio  idLocalidad idAbonado
@@ -353,9 +432,9 @@ class DefaultController extends Controller
         $params = array("abonado" => $idAbonado);
 
         $sql_conexiones = "
-                SELECT 
+                SELECT *
                 FROM Conexion c
-                WHERE c.idAbonado =:abonado";
+                WHERE c.idAbonado =:abonado"; //OK
 
         if($estado !=""){
             $sql_conexiones .= " AND c.nombreEstado = :estadoConexion ";
@@ -373,11 +452,27 @@ class DefaultController extends Controller
         return $query->getResult();
     }
 
+    /**
+     * Devuelve el/los equipo/s tecnico/s, filtrado por zona
+     *
+     * @param string                           $zona            Nombre de la zona
+     *
+     * @return array|null 
+     */
     public function getEquipoTecnico($zona = ""){
         $em = $this->getDoctrine()->getManager();
         return null;
     }
 
+
+    /**
+     * Devuelve la hoja de ruta, con las conexiones asocidas, el trabajo a realizar
+     * y la descripcion de la tarea.
+     *
+     * @param string                           $fecha           Format:("dd/mm/yyyy")
+     *
+     * @return array|null 
+     */
     public function getHojaDeRuta($fecha=""){
 
         $em = $this->getDoctrine()->getManager();
@@ -409,6 +504,9 @@ class DefaultController extends Controller
         return null;
 
     }
+
+
+
 
 
 
@@ -479,7 +577,7 @@ class DefaultController extends Controller
             $descripcion =  $request->get();
             $via =          $request->get();
             $fecha =        new \DateTime();
-            $estado =       "PENDIENTE_REVISIÓN"; //Hacer una clase abstracta como una enumeración
+            $estado =       "PENDIENTE_REVISION"; //Hacer una clase abstracta como una enumeración
 
 
             $conn = $this->getInstanciaConexion();

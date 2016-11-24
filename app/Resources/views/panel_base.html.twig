@@ -109,15 +109,15 @@
                         <a href="javascript:;" data-toggle="collapse" data-target="#demo"><i class="fa fa-fw fa-user"></i> Abonados <i class="fa fa-fw fa-caret-down"></i></a>
                         <ul id="demo" class="collapse">
                             <li>
-                                <a href="{{ path('homepage', {'page': 'abonado_form'}) }}">Nuevo Abonado</a>
+                                <a href="{{ path('abonado', {'page': 'nuevo'}) }}">Nuevo Abonado</a>
                             </li>
                             <li>
-                                <a href="{{ path('homepage', {'page': 'abonado_list'}) }}">Listado</a>
+                                <a href="{{ path('abonado', {'page': 'listado'}) }}">Listado</a>
                             </li>
                         </ul>
                     </li>
                     <li>
-                        <a href=""><i class="fa fa-fw fa-life-ring"></i> Reclamos</a>
+                        <a href="{{ path('reclamo', {'page': 'listado'}) }}"><i class="fa fa-fw fa-life-ring"></i> Reclamos</a>
                     </li>
                     <li>
                         <a href=""><i class="fa fa-fw fa-truck"></i> Hoja de Ruta</a>

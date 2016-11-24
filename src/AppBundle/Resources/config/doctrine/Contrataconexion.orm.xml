@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="AppBundle\Entity\Contrataconexion" table="ContrataConexion">
+    <indexes>
+      <index name="fk_ContrataConexion_ViaComunicacion1_idx" columns="idViaComunicacion"/>
+      <index name="fk_ContrataConexion_Conexion1_idx" columns="idConexion"/>
+      <index name="fk_ContrataConexion_Abonado1_idx" columns="idAbonado"/>
+    </indexes>
+    <id name="idviacomunicacion" association-key="true"/>
+    <id name="idconexion" association-key="true"/>
+    <id name="idabonado" association-key="true"/>
+    <field name="fechainstalacion1" type="datetime" column="fechaInstalacion1" nullable="false"/>
+    <field name="fechainstalacion2" type="datetime" column="fechaInstalacion2" nullable="false"/>
+    <one-to-one field="idabonado" target-entity="Abonado" fetch="LAZY">
+      <join-columns>
+        <join-column name="idAbonado" referenced-column-name="idAbonado"/>
+      </join-columns>
+    </one-to-one>
+    <one-to-one field="idconexion" target-entity="Conexion" fetch="LAZY">
+      <join-columns>
+        <join-column name="idConexion" referenced-column-name="idConexion"/>
+      </join-columns>
+    </one-to-one>
+    <one-to-one field="idviacomunicacion" target-entity="Viacomunicacion" fetch="LAZY">
+      <join-columns>
+        <join-column name="idViaComunicacion" referenced-column-name="idViaComunicacion"/>
+      </join-columns>
+    </one-to-one>
+  </entity>
+</doctrine-mapping>
