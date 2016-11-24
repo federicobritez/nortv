@@ -1,0 +1,15 @@
+nroTrabajo,idPrioridad,estado,idHojasRuta
+1,1,solucionado,1
+2,1,no solucionado,1
+3,1,ausente,2
+4,1,solucionado,2
+5,1,solucionado,3
+6,1,no solucionado,4
+7,1,solucionado,5
+8,1,no solucionado,5
+9,1,solucionado,1
+10,3,solucionado,2
+11,3,solucionado,3
+12,1,solucionado,4
+13,1,solucionado,5
+14,1,solucionado,5
