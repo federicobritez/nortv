@@ -18,9 +18,9 @@ class Contrataconexion
     private $fechainstalacion2;
 
     /**
-     * @var \AppBundle\Entity\Abonado
+     * @var \AppBundle\Entity\Viacomunicacion
      */
-    private $idabonado;
+    private $idviacomunicacion;
 
     /**
      * @var \AppBundle\Entity\Conexion
@@ -28,9 +28,9 @@ class Contrataconexion
     private $idconexion;
 
     /**
-     * @var \AppBundle\Entity\Viacomunicacion
+     * @var \AppBundle\Entity\Abonado
      */
-    private $idviacomunicacion;
+    private $idabonado;
 
 
     /**
@@ -82,27 +82,27 @@ class Contrataconexion
     }
 
     /**
-     * Set idabonado
+     * Set idviacomunicacion
      *
-     * @param \AppBundle\Entity\Abonado $idabonado
+     * @param \AppBundle\Entity\Viacomunicacion $idviacomunicacion
      *
      * @return Contrataconexion
      */
-    public function setIdabonado(\AppBundle\Entity\Abonado $idabonado)
+    public function setIdviacomunicacion(\AppBundle\Entity\Viacomunicacion $idviacomunicacion)
     {
-        $this->idabonado = $idabonado;
+        $this->idviacomunicacion = $idviacomunicacion;
 
         return $this;
     }
 
     /**
-     * Get idabonado
+     * Get idviacomunicacion
      *
-     * @return \AppBundle\Entity\Abonado
+     * @return \AppBundle\Entity\Viacomunicacion
      */
-    public function getIdabonado()
+    public function getIdviacomunicacion()
     {
-        return $this->idabonado;
+        return $this->idviacomunicacion;
     }
 
     /**
@@ -130,27 +130,27 @@ class Contrataconexion
     }
 
     /**
-     * Set idviacomunicacion
+     * Set idabonado
      *
-     * @param \AppBundle\Entity\Viacomunicacion $idviacomunicacion
+     * @param \AppBundle\Entity\Abonado $idabonado
      *
      * @return Contrataconexion
      */
-    public function setIdviacomunicacion(\AppBundle\Entity\Viacomunicacion $idviacomunicacion)
+    public function setIdabonado(\AppBundle\Entity\Abonado $idabonado)
     {
-        $this->idviacomunicacion = $idviacomunicacion;
+        $this->idabonado = $idabonado;
 
         return $this;
     }
 
     /**
-     * Get idviacomunicacion
+     * Get idabonado
      *
-     * @return \AppBundle\Entity\Viacomunicacion
+     * @return \AppBundle\Entity\Abonado
      */
-    public function getIdviacomunicacion()
+    public function getIdabonado()
     {
-        return $this->idviacomunicacion;
+        return $this->idabonado;
     }
 }
 

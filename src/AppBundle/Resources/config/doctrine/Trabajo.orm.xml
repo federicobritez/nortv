@@ -4,21 +4,15 @@
     <indexes>
       <index name="fk_Trabajo_PrioridadTrabajo1_idx" columns="idPrioridadTrabajo"/>
       <index name="fk_Trabajo_HojaRuta1_idx" columns="idHojaRuta"/>
-      <index name="fk_Trabajo_Tarea1_idx" columns="idTarea"/>
     </indexes>
     <id name="idtrabajo" type="integer" column="idTrabajo">
       <generator strategy="IDENTITY"/>
     </id>
-    <field name="estado" type="string" column="estado" length="45" nullable="true">
+    <field name="estadotrabajo" type="string" column="estadoTrabajo" length="45" nullable="true">
       <options>
         <option name="fixed"/>
       </options>
     </field>
-    <many-to-one field="idtarea" target-entity="Tarea" fetch="LAZY">
-      <join-columns>
-        <join-column name="idTarea" referenced-column-name="idTarea"/>
-      </join-columns>
-    </many-to-one>
     <many-to-one field="idhojaruta" target-entity="Hojaruta" fetch="LAZY">
       <join-columns>
         <join-column name="idHojaRuta" referenced-column-name="idHojaRuta"/>
@@ -29,5 +23,15 @@
         <join-column name="idPrioridadTrabajo" referenced-column-name="idPrioridadTrabajo"/>
       </join-columns>
     </many-to-one>
+    <many-to-many field="idtarea" target-entity="Tarea" inversed-by="idtrabajo" fetch="LAZY">
+      <join-table name="tareaportrabajo">
+        <join-columns>
+          <join-column name="idTrabajo" referenced-column-name="idTrabajo"/>
+        </join-columns>
+        <inverse-join-columns>
+          <join-column name="idTarea" referenced-column-name="idTarea"/>
+        </inverse-join-columns>
+      </join-table>
+    </many-to-many>
   </entity>
 </doctrine-mapping>

@@ -68,8 +68,8 @@ encargada deberá enviar un mail al abonado indicando que su reclamo ha sido pro
 
                                       <td>{{r.idReclamo}}</td>
                                       <td>{{r.fechaReclamo|date("d/m/Y h:m") }}</td>
-                                      <td><a href="#">{{r.idAbonado}}{{r.esMoroso}}</a></td>
-                                      <td><a href="#">{{r.idConexion}}</a></td>
+                                      <td>{{r.idAbonado}}{{r.esMoroso}}</td>
+                                      <td>{{r.idConexion}}</td>
                                       <td>{{r.nombreViaComunicacion}}</td>
                                       <td>{{r.estadoReclamo|upper}}</td>
                                       <td><button type="button" class="btn btn-default btn-primary" data-toggle="modal" data-target="#modalDetalleReclamo" onclick="setDetalles('{{r.idReclamo}}','{{r.apellidoNombre}}','{{r.nombreZona}}','{{r.direccion}}','{{r.esMoroso}}','{{r.nombreServicio}}','{{r.descripcion}}')">Detalle</button></td>

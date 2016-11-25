@@ -10,17 +10,12 @@ class Trabajo
     /**
      * @var string
      */
-    private $estado;
+    private $estadotrabajo;
 
     /**
      * @var integer
      */
     private $idtrabajo;
-
-    /**
-     * @var \AppBundle\Entity\Tarea
-     */
-    private $idtarea;
 
     /**
      * @var \AppBundle\Entity\Hojaruta
@@ -32,29 +27,41 @@ class Trabajo
      */
     private $idprioridadtrabajo;
 
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $idtarea;
 
     /**
-     * Set estado
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->idtarea = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Set estadotrabajo
      *
-     * @param string $estado
+     * @param string $estadotrabajo
      *
      * @return Trabajo
      */
-    public function setEstado($estado)
+    public function setEstadotrabajo($estadotrabajo)
     {
-        $this->estado = $estado;
+        $this->estadotrabajo = $estadotrabajo;
 
         return $this;
     }
 
     /**
-     * Get estado
+     * Get estadotrabajo
      *
      * @return string
      */
-    public function getEstado()
+    public function getEstadotrabajo()
     {
-        return $this->estado;
+        return $this->estadotrabajo;
     }
 
     /**
@@ -65,30 +72,6 @@ class Trabajo
     public function getIdtrabajo()
     {
         return $this->idtrabajo;
-    }
-
-    /**
-     * Set idtarea
-     *
-     * @param \AppBundle\Entity\Tarea $idtarea
-     *
-     * @return Trabajo
-     */
-    public function setIdtarea(\AppBundle\Entity\Tarea $idtarea = null)
-    {
-        $this->idtarea = $idtarea;
-
-        return $this;
-    }
-
-    /**
-     * Get idtarea
-     *
-     * @return \AppBundle\Entity\Tarea
-     */
-    public function getIdtarea()
-    {
-        return $this->idtarea;
     }
 
     /**
@@ -137,6 +120,40 @@ class Trabajo
     public function getIdprioridadtrabajo()
     {
         return $this->idprioridadtrabajo;
+    }
+
+    /**
+     * Add idtarea
+     *
+     * @param \AppBundle\Entity\Tarea $idtarea
+     *
+     * @return Trabajo
+     */
+    public function addIdtarea(\AppBundle\Entity\Tarea $idtarea)
+    {
+        $this->idtarea[] = $idtarea;
+
+        return $this;
+    }
+
+    /**
+     * Remove idtarea
+     *
+     * @param \AppBundle\Entity\Tarea $idtarea
+     */
+    public function removeIdtarea(\AppBundle\Entity\Tarea $idtarea)
+    {
+        $this->idtarea->removeElement($idtarea);
+    }
+
+    /**
+     * Get idtarea
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getIdtarea()
+    {
+        return $this->idtarea;
     }
 }
 

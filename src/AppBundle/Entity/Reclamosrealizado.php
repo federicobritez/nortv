@@ -13,19 +13,9 @@ class Reclamosrealizado
     private $fechareclamo;
 
     /**
-     * @var integer
-     */
-    private $idreclamosrealizado;
-
-    /**
      * @var \AppBundle\Entity\Reclamo
      */
     private $idreclamo;
-
-    /**
-     * @var \AppBundle\Entity\Viacomunicacion
-     */
-    private $idviacomunicacion;
 
     /**
      * @var \AppBundle\Entity\Conexion
@@ -36,6 +26,11 @@ class Reclamosrealizado
      * @var \AppBundle\Entity\Abonado
      */
     private $idabonado;
+
+    /**
+     * @var \AppBundle\Entity\Viacomunicacion
+     */
+    private $idviacomunicacion;
 
 
     /**
@@ -63,23 +58,13 @@ class Reclamosrealizado
     }
 
     /**
-     * Get idreclamosrealizado
-     *
-     * @return integer
-     */
-    public function getIdreclamosrealizado()
-    {
-        return $this->idreclamosrealizado;
-    }
-
-    /**
      * Set idreclamo
      *
      * @param \AppBundle\Entity\Reclamo $idreclamo
      *
      * @return Reclamosrealizado
      */
-    public function setIdreclamo(\AppBundle\Entity\Reclamo $idreclamo = null)
+    public function setIdreclamo(\AppBundle\Entity\Reclamo $idreclamo)
     {
         $this->idreclamo = $idreclamo;
 
@@ -94,6 +79,54 @@ class Reclamosrealizado
     public function getIdreclamo()
     {
         return $this->idreclamo;
+    }
+
+    /**
+     * Set idconexion
+     *
+     * @param \AppBundle\Entity\Conexion $idconexion
+     *
+     * @return Reclamosrealizado
+     */
+    public function setIdconexion(\AppBundle\Entity\Conexion $idconexion)
+    {
+        $this->idconexion = $idconexion;
+
+        return $this;
+    }
+
+    /**
+     * Get idconexion
+     *
+     * @return \AppBundle\Entity\Conexion
+     */
+    public function getIdconexion()
+    {
+        return $this->idconexion;
+    }
+
+    /**
+     * Set idabonado
+     *
+     * @param \AppBundle\Entity\Abonado $idabonado
+     *
+     * @return Reclamosrealizado
+     */
+    public function setIdabonado(\AppBundle\Entity\Abonado $idabonado)
+    {
+        $this->idabonado = $idabonado;
+
+        return $this;
+    }
+
+    /**
+     * Get idabonado
+     *
+     * @return \AppBundle\Entity\Abonado
+     */
+    public function getIdabonado()
+    {
+        return $this->idabonado;
     }
 
     /**
@@ -118,54 +151,6 @@ class Reclamosrealizado
     public function getIdviacomunicacion()
     {
         return $this->idviacomunicacion;
-    }
-
-    /**
-     * Set idconexion
-     *
-     * @param \AppBundle\Entity\Conexion $idconexion
-     *
-     * @return Reclamosrealizado
-     */
-    public function setIdconexion(\AppBundle\Entity\Conexion $idconexion = null)
-    {
-        $this->idconexion = $idconexion;
-
-        return $this;
-    }
-
-    /**
-     * Get idconexion
-     *
-     * @return \AppBundle\Entity\Conexion
-     */
-    public function getIdconexion()
-    {
-        return $this->idconexion;
-    }
-
-    /**
-     * Set idabonado
-     *
-     * @param \AppBundle\Entity\Abonado $idabonado
-     *
-     * @return Reclamosrealizado
-     */
-    public function setIdabonado(\AppBundle\Entity\Abonado $idabonado = null)
-    {
-        $this->idabonado = $idabonado;
-
-        return $this;
-    }
-
-    /**
-     * Get idabonado
-     *
-     * @return \AppBundle\Entity\Abonado
-     */
-    public function getIdabonado()
-    {
-        return $this->idabonado;
     }
 }
 

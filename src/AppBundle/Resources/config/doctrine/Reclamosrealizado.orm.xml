@@ -7,28 +7,28 @@
       <index name="fk_ReclamosRealizado_ViaComunicacion1_idx" columns="idViaComunicacion"/>
       <index name="fk_ReclamosRealizado_Reclamo1_idx" columns="idReclamo"/>
     </indexes>
-    <id name="idreclamosrealizado" type="integer" column="idReclamosRealizado">
-      <generator strategy="IDENTITY"/>
-    </id>
+    <id name="idabonado" association-key="true"/>
+    <id name="idconexion" association-key="true"/>
+    <id name="idreclamo" association-key="true"/>
     <field name="fechareclamo" type="datetime" column="fechaReclamo" nullable="false"/>
-    <many-to-one field="idreclamo" target-entity="Reclamo" fetch="LAZY">
+    <one-to-one field="idreclamo" target-entity="Reclamo" fetch="LAZY">
       <join-columns>
         <join-column name="idReclamo" referenced-column-name="idReclamo"/>
       </join-columns>
-    </many-to-one>
-    <many-to-one field="idviacomunicacion" target-entity="Viacomunicacion" fetch="LAZY">
-      <join-columns>
-        <join-column name="idViaComunicacion" referenced-column-name="idViaComunicacion"/>
-      </join-columns>
-    </many-to-one>
-    <many-to-one field="idconexion" target-entity="Conexion" fetch="LAZY">
+    </one-to-one>
+    <one-to-one field="idconexion" target-entity="Conexion" fetch="LAZY">
       <join-columns>
         <join-column name="idConexion" referenced-column-name="idConexion"/>
       </join-columns>
-    </many-to-one>
-    <many-to-one field="idabonado" target-entity="Abonado" fetch="LAZY">
+    </one-to-one>
+    <one-to-one field="idabonado" target-entity="Abonado" fetch="LAZY">
       <join-columns>
         <join-column name="idAbonado" referenced-column-name="idAbonado"/>
+      </join-columns>
+    </one-to-one>
+    <many-to-one field="idviacomunicacion" target-entity="Viacomunicacion" fetch="LAZY">
+      <join-columns>
+        <join-column name="idViaComunicacion" referenced-column-name="idViaComunicacion"/>
       </join-columns>
     </many-to-one>
   </entity>

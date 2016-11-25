@@ -17,6 +17,18 @@ class Tarea
      */
     private $idtarea;
 
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $idtrabajo;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->idtrabajo = new \Doctrine\Common\Collections\ArrayCollection();
+    }
 
     /**
      * Set nombretarea
@@ -50,6 +62,40 @@ class Tarea
     public function getIdtarea()
     {
         return $this->idtarea;
+    }
+
+    /**
+     * Add idtrabajo
+     *
+     * @param \AppBundle\Entity\Trabajo $idtrabajo
+     *
+     * @return Tarea
+     */
+    public function addIdtrabajo(\AppBundle\Entity\Trabajo $idtrabajo)
+    {
+        $this->idtrabajo[] = $idtrabajo;
+
+        return $this;
+    }
+
+    /**
+     * Remove idtrabajo
+     *
+     * @param \AppBundle\Entity\Trabajo $idtrabajo
+     */
+    public function removeIdtrabajo(\AppBundle\Entity\Trabajo $idtrabajo)
+    {
+        $this->idtrabajo->removeElement($idtrabajo);
+    }
+
+    /**
+     * Get idtrabajo
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getIdtrabajo()
+    {
+        return $this->idtrabajo;
     }
 }
 

@@ -10,7 +10,7 @@ class Zona
     /**
      * @var string
      */
-    private $nombre;
+    private $nombrezona;
 
     /**
      * @var integer
@@ -19,27 +19,27 @@ class Zona
 
 
     /**
-     * Set nombre
+     * Set nombrezona
      *
-     * @param string $nombre
+     * @param string $nombrezona
      *
      * @return Zona
      */
-    public function setNombre($nombre)
+    public function setNombrezona($nombrezona)
     {
-        $this->nombre = $nombre;
+        $this->nombrezona = $nombrezona;
 
         return $this;
     }
 
     /**
-     * Get nombre
+     * Get nombrezona
      *
      * @return string
      */
-    public function getNombre()
+    public function getNombrezona()
     {
-        return $this->nombre;
+        return $this->nombrezona;
     }
 
     /**

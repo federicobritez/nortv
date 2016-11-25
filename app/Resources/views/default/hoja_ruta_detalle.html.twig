@@ -25,9 +25,9 @@ encargada deberá enviar un mail al abonado indicando que su reclamo ha sido pro
 
             <!-- Page Heading -->
             <div class="row">
-              <div class="col-lg-6">
+              <div class="col-lg-12">
                 <h2 class="page-header">
-                  Hojas de Ruta:  {{hoja.idHojaRuta}}<small> - Fecha {{ hoja.fechaEmision|date("d/m/Y h:m")}}</small>
+                  Hojas de Ruta : Nº {{hoja.idHojaRuta}}<small> - Fecha {{ hoja.fechaEmision|date("d/m/Y h:m")}}</small>
                 </h2>
 
                 <!--<ol class="breadcrumb">
@@ -44,7 +44,16 @@ encargada deberá enviar un mail al abonado indicando que su reclamo ha sido pro
             <!-- /.row -->
 
             <div class="row">
+                <div class="col-lg-10 ">
+                    <a href="{{ path('hojaRuta', {'page': 'index'}) }}" ="btn" class="btn btn-default btn-info">Volver a Hojas de Ruta</a>
+                    <dl>
+                </div>
+            </div>
+
+
+            <div class="row">
             	<div class="col-lg-12">
+
             		<div class="row">
                         <div class="col-lg-12">
                             <!--<h2>Contextual Classes</h2>-->
@@ -86,13 +95,13 @@ encargada deberá enviar un mail al abonado indicando que su reclamo ha sido pro
                                     <div class="modal-content">
                                       <div class="modal-header">
                                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                        <h4 class="modal-title">Detalle tareas Realizadas</h4> 
+                                        <h4 class="modal-title">Detalle de tareas realizadas</h4> 
                                       </div>
                                       <div class="modal-body">
                                         <table class="table-responsive" id="table_tareas">
                                             <thead>
                                             <tr>
-                                                <th>Tarea</th>
+                                                <th>Tareas:</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
