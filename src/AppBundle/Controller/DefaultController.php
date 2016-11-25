@@ -154,6 +154,8 @@ class DefaultController extends Controller
 
             $arrayClassRow = array("CERRADO" => "success", "PENDIENTE" => "warning" , "PENDIENTE DE REVISION" => "danger");
 
+
+
             return $this->render(sprintf('default/%s.html.twig', "reclamo_list"),
                             array("reclamos" => $reclamos, "classRow" => $arrayClassRow)); 
 
@@ -161,6 +163,8 @@ class DefaultController extends Controller
         }
         return null;
     }
+
+
 
     /**
      * @Route("/hojaRuta/{page}", name="hojaRuta" ,defaults={"page"="null"})
@@ -399,14 +403,18 @@ class DefaultController extends Controller
                     r.idReclamo , r.descripcion , r.estadoReclamo,
                     ra.idConexion , ra.idViaComunicacion, ra.fechaReclamo,
                     a.idAbonado, a.apellidoNombre, a.email,
-                    c.idConexion, c.idLocalidad , c.direccion,
+                    c.idConexion, c.idLocalidad , c.direccion , c.esMoroso ,
+                    s.nombreServicio,
                     l.nombreLocalidad,
-                    v.nombreViaComunicacion
+                    v.nombreViaComunicacion,
+                    z.nombreZona
                 FROM ReclamosRealizado ra
-                INNER JOIN Reclamo   As r ON ra.idReclamo = r.idReclamo
-                INNER JOIN Abonado   As a ON ra.idAbonado = a.idAbonado
-                INNER JOIN Conexion  As c ON ra.idConexion = c.idConexion
+                INNER JOIN Reclamo   As r ON ra.idReclamo = r.idReclamo 
+                INNER JOIN Abonado   As a ON ra.idAbonado = a.idAbonado 
+                INNER JOIN Conexion  As c ON ra.idConexion = c.idConexion 
+                INNER JOIN Servicio AS s ON c.idServicio = s.idServicio 
                 INNER JOIN Localidad As l ON c.idLocalidad = l.idLocalidad 
+                INNER JOIN Zona AS z ON l.idZona = z.idZona 
                 INNER JOIN ViaComunicacion As v ON ra.idViaComunicacion = v.idViaComunicacion "; //OK
 
 

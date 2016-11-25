@@ -1,0 +1,103 @@
+
+
+
+
+//Consulta Abonado
+SELECT 
+                            a.idAbonado, a.dni, a.apellidoNombre,  
+                            a.direccion, a.telefono, a.celular, a.email  
+                        FROM Abonado a'
+
+
+//Consulta Servicios
+SELECT 
+                s.idServicio, s.nombreServicio , s.costo, s.cantCanales,
+                s.cantCanalesHD, s.cantCanalesPelicula,s.esPremium, s.esPlus, s.esEstandar 
+            FROM Servicio s
+
+
+//Consulta Localidades con Zona
+$sql_localidades = "
+                SELECT 
+                    l.idLocalidad, l.nombreLocalidad, l.codigoPostal, z.nombreZona
+                FROM Localidad l
+                INNER JOIN Zona z  ON l.idZona = z.idZona "; //OK
+
+// Consulta reclamos
+        $sql_reclamos= "
+                SELECT 
+                    r.idReclamo , r.descripcion , r.estadoReclamo,
+                    ra.idConexion , ra.idViaComunicacion, ra.fechaReclamo,
+                    a.idAbonado, a.apellidoNombre, a.email,
+                    c.idConexion, c.idLocalidad , c.direccion , c.esMoroso ,
+                    s.nombreServicio,
+                    l.nombreLocalidad,
+                    v.nombreViaComunicacion,
+                    z.nombreZona
+                FROM ReclamosRealizado ra
+                INNER JOIN Reclamo   As r ON ra.idReclamo = r.idReclamo 
+                INNER JOIN Abonado   As a ON ra.idAbonado = a.idAbonado 
+                INNER JOIN Conexion  As c ON ra.idConexion = c.idConexion 
+                INNER JOIN Servicio AS s ON c.idServicio = s.idServicio 
+                INNER JOIN Localidad As l ON c.idLocalidad = l.idLocalidad 
+                INNER JOIN Zona AS z ON l.idZona = z.idZona 
+                INNER JOIN ViaComunicacion As v ON ra.idViaComunicacion = v.idViaComunicacion "; //OK
+
+// Consulta Conexiones de Abonado                
+
+SELECT *
+                FROM Conexion c
+                WHERE c.idAbonado =:abonado
+
+
+//Consulta detalles Hoja Rutas (Todas las hojas)                 
+
+ SELECT 
+                h.idHojaRuta,
+                h.fechaEmision,
+                t.idTrabajo,
+                c.idConexion , 
+                t.estadoTrabajo, t.idPrioridadTrabajo , 
+                rt.fechaTrabajo,
+                et.idEquipoTecnico,
+                i.nombreInsumo,
+                p.nombrePrioridad,
+                a.apellidoNombre
+
+            FROM HojaRuta AS h
+            INNER JOIN ConexionEnHojaRuta AS ch ON h.idHojaRuta = ch.idHojaRuta
+            INNER JOIN Conexion c  ON  c.idConexion = ch.idConexion
+            INNER JOIN Trabajo  t  ON t.idHojaRuta = h.idHojaRuta
+            INNER JOIN TrabajoRealizado rt  ON  rt.idTrabajo = t.idTrabajo 
+            INNER JOIN EquipoTecnico et  ON  et.idEquipoTecnico = rt.idEquipoTecnico
+            INNER JOIN Insumo i  ON  i.idInsumo = rt.idInsumo
+            INNER JOIN PrioridadTrabajo p ON p.idPrioridadTrabajo = t.idPrioridadTrabajo
+            INNER JOIN Abonado a ON a.idAbonado = c.idAbonado
+
+
+
+//---------PESISNTENCIA ---------------
+
+//Abonado nuevo
+
+INSERT INTO 
+                            Abonado
+                               (dni,apellidoNombre,direccion,telefono,celular,email) 
+                            VALUES
+                                ($dni,'$apellidoNombre','$direccion','$telefono','$celular','$email')
+
+//Conexion Nueva
+
+INSERT INTO
+                        Conexion 
+                        (direccion,fechaInstalacionReal,coordenadas, esMoroso, idAbonado, idEstadoConexion,idServicio, idLocalidad)
+                        VALUES 
+                        ('$direccion', NULL, NULL, $esMoroso, $idAbonado, $idEstadoConexion,$idServicio,$idLocalidad)
+
+// Contrato de Conexion
+
+INSERT INTO
+                        ContrataConexion 
+                        (idAbonado,idConexion,idViaComunicacion,fechaInstalacion1,fechaInstalacion2) 
+                        VALUES 
+                        ($idAbonado, $idConexion, $idViaComunicacion, '$fechaInstalacion1','$fechaInstalacion2')                                

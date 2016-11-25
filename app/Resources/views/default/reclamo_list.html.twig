@@ -28,6 +28,7 @@ encargada deberá enviar un mail al abonado indicando que su reclamo ha sido pro
               <div class="col-lg-6">
                 <h2 class="page-header">
                   Reclamos <small>Listado</small>
+
                 </h2>
                 <!--<ol class="breadcrumb">
                             <li>
@@ -51,38 +52,73 @@ encargada deberá enviar un mail al abonado indicando que su reclamo ha sido pro
                                 <table id="datatable-norTv" class="table table-bordered table-hover table-striped">
                                     <thead>
                                         <tr>
-                                            <th>NºReclamo</th>
+                                            <th>Nº</th>
                                             <th>Fecha</th>
                                             <th>NºAbonado</th>
-                                            <th>Nombre Abo.</th>
                                             <th>NºConexion</th>
-                                            <th>Localidad</th>
                                             <th>Via de Comun.</th>
                                             <th>EstadoReclamo</th>
                                             <th>Descripcion</th>
-                                            <th></th>
+                                            
                                         </tr>
                                     </thead>
                                     <tbody>
-                                    {% for reclamo in reclamos %}
-                                     <tr class="{{classRow[reclamo.estadoReclamo|upper]}}">
+                                    {% for r in reclamos %}
+                                     <tr class="{{classRow[r.estadoReclamo|upper]}}">
 
-                                      <td>{{reclamo.idReclamo}}</td>
-                                      <td>{{reclamo.fechaReclamo|date("d/m/Y h:m") }}</td>
-                                      <td>{{reclamo.idAbonado}}</td>
-                                      <td>{{reclamo.apellidoNombre}}</td>
-                                      <td>{{reclamo.idConexion}}</td>
-                                      <td>{{reclamo.nombreLocalidad}}</td>
-                                      <td>{{reclamo.nombreViaComunicacion}}</td>
-                                      <td>{{reclamo.estadoReclamo}}</td>
-                                      
-                                      <td>...</td>
-                                      <td>VA UN BOTON</td>
+                                      <td>{{r.idReclamo}}</td>
+                                      <td>{{r.fechaReclamo|date("d/m/Y h:m") }}</td>
+                                      <td><a href="#">{{r.idAbonado}}{{r.esMoroso}}</a></td>
+                                      <td><a href="#">{{r.idConexion}}</a></td>
+                                      <td>{{r.nombreViaComunicacion}}</td>
+                                      <td>{{r.estadoReclamo|upper}}</td>
+                                      <td><button type="button" class="btn btn-default btn-primary" data-toggle="modal" data-target="#modalDetalleAbonado" onclick="setDetalles('{{r.idReclamo}}','{{r.apellidoNombre}}','{{r.nombreZona}}','{{r.direccion}}','{{r.esMoroso}}','{{r.nombreServicio}}','{{r.descripcion}}')">Detalle</button></td>
                                     </tr>
                                     {% endfor %}
                                        
                                     </tbody>
                                 </table>
+                                <div class="modal" id="modalDetalleAbonado">
+                                  <div class="modal-dialog">
+                                    <div class="modal-content">
+                                      <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                        <h4 class="modal-title" id="idReclamo"></h4> 
+                                      </div>
+                                      <div class="modal-body">
+                                        <table class="table-responsive">
+                                          <tr>
+                                            <th>Abonado:</th>
+                                            <td id="nombreApellido"></td>
+                                          </tr>
+                                          <tr>
+                                            <th>Zona Conexion:</th>
+                                            <td id="zona"></td>
+                                          </tr>
+                                          <tr>
+                                            <th>Direccion:</th>
+                                            <td id="direccion"></td>
+                                          </tr>
+                                          <tr>
+                                            <th>Morosidad:</th>
+                                            <td id="morosidad"></td>
+                                          </tr>
+                                          <tr>
+                                            <th>Servicio:</th>
+                                            <td id="servicio"></td>
+                                          </tr>
+                                          <tr>
+                                            <th>Descripcion Falla:</th>
+                                            <td id="descripcion"></td>
+                                          </tr>
+                                        </table>
+                                      </div>
+                                      <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -120,7 +156,22 @@ $(document).ready(function() {
         }
     });
 
-
 } );
+
+function setDetalles(idReclamo, nombre,zona,direccion,morosidad,servicio,descripcion){
+
+    $("#idReclamo").html("Detalle Reclamo :" + idReclamo);
+    $("#nombreApellido").html(nombre);
+    $("#nombreApellido").html(nombre);
+    $("#zona").html(zona);
+    $("#direccion").html(direccion);
+    if(morosidad == "1"){ morosidad ="SI";}
+    else{morosidad = "NO";}
+    $("#morosidad").html(morosidad);
+    $("#servicio").html(servicio);
+    $("#descripcion").html(descripcion);
+
+    
+}
 </script>
 {% endblock %}
