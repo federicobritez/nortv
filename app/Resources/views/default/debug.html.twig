@@ -1,0 +1,37 @@
+{% extends 'panel_base.html.twig' %}
+
+{% block title %}{{ parent() }}{% endblock %}
+
+{% block body %} {{parent()}}
+
+<div id="wrapper">
+        {% block sidebar %}{{parent()}}{% endblock%}
+
+        {% block page_content %}
+    <div id="page-wrapper">
+
+        <div class="container-fluid">
+
+            <!-- Page Heading -->
+            <div class="row">
+              <div class="col-lg-12">
+                <h2 class="page-header">
+                  Debug <small>Depuracion</small>
+                </h2>
+                {{dump(debug)}}
+                </div>
+            </div>
+        </div>
+        <!-- /.container-fluid -->
+    </div>
+    <!-- /#page-wrapper -->
+        {% endblock %}
+</div>
+<!-- /#wrapper --> 
+
+{% endblock %}
+
+{% block footer %}  {{ parent() }}  {% endblock %}
+
+{%block javascripts %}{{ parent() }}
+{% endblock %}

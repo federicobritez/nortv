@@ -47,8 +47,32 @@ Pre:
 	Servicios, Conexiones, EstadoConexion, Abonados, Zonas, Localidades, 
 	Equipos de técnicos, Técnicos, Reclamo, 
 
-	
-Cada hoja de ruta tiene una zona y un equipo de trabajo. 
+
+
+Cada hoja de ruta tiengo Conexiones(nuevas o con problemas). 
+Tiene que traer los atributos que tenga en la tabla Trabajo: 
+	* Priorida
+	* Estado
+	* Trabajo
+De la Trabajo se asocia la TrabajoRealizado que tiene:
+	* EquipoTecnico
+	* Los insumos
+	* La fecha en que se realizo
+
+Obtengo la conexión asociada de la tabla ConexionEnHojaRuta. De estos obtengo:
+	* Conexion
+De la conexión traigo:
+	* EstadoConexion
+	* Abonado
+El detalle de tareas realizas esta en TareasPorTrabajo
+	* Tareas (list)
+
+
+
+
+
+
+---------------------------------------------------------
 
 De acuerdo a los trabajo ser realiza la hoja de ruta.
 

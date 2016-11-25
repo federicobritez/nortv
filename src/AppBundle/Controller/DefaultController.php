@@ -27,12 +27,10 @@ class DefaultController extends Controller
 
 
 
-
-
     /**
      * @Route("/abonado/{page}", name="abonado" ,defaults={"page"="null"})
      */
-    public function abonadoAction(Request $request,$page="index")
+    public function abonadoAction(Request $request, $page="index")
     {
         if($page == "nuevo"){
 
@@ -48,12 +46,53 @@ class DefaultController extends Controller
 
         }
 
+        if($page =="guardarNuevo"){
+
+            $params = array();
+            $params["apellidoNombre"] = $request->get("inputApellido").",".$request->get("inputNombre");
+            $params["dni"] = $request->get("inputDni");
+            $params["email"] = $request->get("inputEmail");
+            $params["direccion"] = $request->get("inputDireccion");
+            
+            $params["telefono"] = $request->get("inputTelFijo");
+            $params["celular"] = $request->get("inputTelCelular");
+
+            $params["idServicio"] = $request->get("inputServicio");
+            $params["direccionInstalacion"] = $request->get("inputDireccionInstalacion");
+            $params["idLocalidad"] = $request->get("inputLocalidad");
+            $params["fechaInstalacion1"] = \DateTime::createFromFormat("d/ m /Y H:i", $request->get("inputFecha1")); //OK
+
+            $params["fechaInstalacion2"] = \DateTime::createFromFormat("d/ m /Y H:i",$request->get("inputFecha2")); //OK
+
+
+            $idAbonado = $this->persistirAbonado($params["dni"], $params["apellidoNombre"],$params["direccion"],$params["telefono"],$params["celular"],$params["email"]);
+
+            $idEstadoConexion = 2;//$this->getIdEstadoConexion("nueva");
+
+
+            $idConexion = $this->persistirConexion($params["direccionInstalacion"],"","",0,$idAbonado,$idEstadoConexion,$params["idServicio"],$params["idLocalidad"]);
+
+            $ViaComunicacion = 1; ////$this->getIdViaComunicacion("nueva"); 
+
+            $this->persistirContrataConexion($idAbonado,$idConexion,$ViaComunicacion,$params["fechaInstalacion1"],$params["fechaInstalacion2"]);
+
+            return $this->render(sprintf('default/%s.html.twig', "abonado_creado"),
+                 array("debug" => $idConexion,"idAbonado"=> $idAbonado, "idConexion" => $idConexion , "params" => $request->request->all())); 
+        }
+
         if($page == "listado"){
 
-            $abonados = $this->getAbonados();//$this->getInstanciaConexion();//$this->getAbonados();
+            $abonados = $this->getAbonados();
+            
+            /* Los servicios disponibles */
+            $servicios = $this->getServicios();
+
+            /* Las localidades disponibles*/
+            $localidades = $this->getLocalidades();
 
             return $this->render(sprintf('default/%s.html.twig', "abonado_list"),
-                            array("abonados" => $abonados,"debug"=>$abonados)); 
+                            array("abonados" => $abonados,"debug"=>$request->get("inputNombre"),
+                                "servicios"=>$servicios , "localidades"=>$localidades)); 
         }
         // replace this example code with whatever you need
         return $this->render('default/s'.$page.'.html.twig', [
@@ -123,6 +162,20 @@ class DefaultController extends Controller
         return null;
     }
 
+    /**
+     * @Route("/hojaRuta/{page}", name="hojaRuta" ,defaults={"page"="null"})
+     */
+    public function hojaRutaAction(Request $request,$page="index")
+    {
+        $hojasRuta = $this->getHojaDeRuta();
+        return $this->render(sprintf('default/%s.html.twig', "hoja_ruta_list"),
+                            array("hojasRuta" => $hojasRuta)); 
+
+
+    }
+
+
+
 
     // Funciones para obtener todos los registros de las entidades de la base de datos. 
 
@@ -184,7 +237,7 @@ class DefaultController extends Controller
         $rsm->addFieldResult('a', 'apellidoNombre', 'apellidonombre');
         $rsm->addFieldResult('a', 'direccion', 'direccion');
         $rsm->addFieldResult('a', 'telefono', 'telefono');
-        $rsm->addFieldResult('a', 'telefono', 'telefono');
+        $rsm->addFieldResult('a', 'celular', 'celular');
         $rsm->addFieldResult('a', 'email', 'email');
 
 
@@ -266,41 +319,30 @@ class DefaultController extends Controller
     /**
      * Devuelve todas las localidades o filtradas por Zona 
      *
-     * @param string                           $zona           Nombre de la zona
+     * @param string                           $zona           Id de la zona
      *
      * @return array|null 
      */
 
-    public  function getLocalidades($zona=""){
+    public  function getLocalidades($idZona=""){
 
-        $em = $this->getDoctrine()->getManager();
-        $rsm = new ResultSetMapping();
-        $rsm->addEntityResult('AppBundle:Localidad',  'l');
-        $rsm->addFieldResult('l', 'idLocalidad',     'idlocalidad');
-        $rsm->addFieldResult('l', 'nombreLocalidad', 'nombrelocalidad');
-        $rsm->addFieldResult('l', 'codigoPostal',    'codigopostal');
-        $rsm->addFieldResult('l', 'idZona',      'idzona');
-        $rsm->addJoinedEntityResult('AppBundle:Zona' , 'z', 'l', 'idzona');
-        $rsm->addFieldResult('z', 'nombreZona', 'nombrezona');
+        $conn = $this->getInstanciaConexion();
 
         $sql_localidades = "
                 SELECT 
-                    l.idLocalidad, l.nombreLocalidad, l.codigoPostal, z.nombre
-                    FROM Localidad l
-                    INNER JOIN Zona z  ON l.idZona = z.idZona "; //OK
+                    l.idLocalidad, l.nombreLocalidad, l.codigoPostal, z.nombreZona
+                FROM Localidad l
+                INNER JOIN Zona z  ON l.idZona = z.idZona "; //OK
 
-        if($zona !=""){
-            $sql_localidades .= " WHERE l.nombreZona = ?";
+        if($idZona !=""){
+            $sql_localidades .= " WHERE l.idZona = :zona";
         }
-        $query = $em->createNativeQuery($sql_localidades, $rsm);
-
-        $query->setParameter(1, $zona);
-
-        //Ejecuta y obtiene los resultados
-        $localidades = $query->getResult();
-
-
-        return $localidades;
+        
+        $query = $conn->prepare($sql_localidades);
+        $query->bindParam(':zona',$idZona);
+        $query->execute();
+        return $query->fetchAll();
+        
     }
 
     /**
@@ -477,8 +519,6 @@ class DefaultController extends Controller
      */
     public function getHojaDeRuta($fecha=""){
 
-        $em = $this->getDoctrine()->getManager();
-
         //HojaRuta: idHojaRuta  fechaEmision
 
         //ConexionEnHojaRuta: idConexion  idHojaRuta
@@ -487,30 +527,131 @@ class DefaultController extends Controller
 
         //Tarea: idTarea    nombreTarea
 
+        $conn = $this->getInstanciaConexion();
+
         $sqlHojaRuta = "
             SELECT 
-            h.idHojaRuta , h.fechaEmision,
-            ceh.idConexion
-            t.idPrioridad , t.estadoReclamo,
-            ta.nombreTarea
+                h.idHojaRuta,
+                h.fechaEmision,
+                t.idTrabajo,
+                c.idConexion , 
+                t.estadoTrabajo, t.idPrioridadTrabajo , 
+                rt.fechaTrabajo,
+                et.idEquipoTecnico,
+                i.nombreInsumo,
+                p.nombrePrioridad,
+                a.apellidoNombre
 
-            FROM HojaRuta h
-            INNER JOIN ConexionEnHojaRuta ceh ON h.idHojaRuta = ceh.idHojaRuta 
-            INNER JOIN Trabajo t ON h.idHojaRuta = t.idHojaRuta 
-            INNER JOIN Tarea ta ON t.idTarea = ta.idTarea";
+            FROM HojaRuta AS h
+            INNER JOIN ConexionEnHojaRuta AS ch ON h.idHojaRuta = ch.idHojaRuta
+            INNER JOIN Conexion c  ON  c.idConexion = ch.idConexion
+            INNER JOIN Trabajo  t  ON t.idHojaRuta = h.idHojaRuta
+            INNER JOIN TrabajoRealizado rt  ON  rt.idTrabajo = t.idTrabajo 
+            INNER JOIN EquipoTecnico et  ON  et.idEquipoTecnico = rt.idEquipoTecnico
+            INNER JOIN Insumo i  ON  i.idInsumo = rt.idInsumo
+            INNER JOIN PrioridadTrabajo p ON p.idPrioridadTrabajo = t.idPrioridadTrabajo
+            INNER JOIN Abonado a ON a.idAbonado = c.idAbonado
+            ";
+
+
 
         if($fecha != ""){
             $sqlHojaRuta .= "";  
         }
 
-        return null;
+        $query = $conn->prepare($sqlHojaRuta);
+        $query ->execute();
+
+        return $query->fetchAll();
 
     }
 
 
+    /**
+     * Persiste en DB un Aboando nuevo
+     *
+     * @param integer                         $dni    
+     * @param string                          $apellidoNombre    Apellido y nombre concatenados por una coma
+     * @param string                          $direccion         Direccion el Abonado
+     * @param string                          $telefono          Telefono fijo del Abonado
+     * @param string                          $celular           Telefono celular del Abonado
+     * @param string                          $email             Corre Electronico del Abonado
+     *
+     * @return integer|null       El ID asigando al Abonado
+     */
 
 
+    public function persistirAbonado($dni,$apellidoNombre,$direccion,$telefono,$celular,$email ){
+        
+        $sql_nuevo_abonado = "INSERT INTO 
+                            Abonado
+                               (dni,apellidoNombre,direccion,telefono,celular,email) 
+                            VALUES
+                                ($dni,'$apellidoNombre','$direccion','$telefono','$celular','$email')";
 
+        $conn = $this->getInstanciaConexion();
+        $query = $conn->prepare($sql_nuevo_abonado);
+        $query->execute();
+        return  $conn->lastInsertId();
+    }
+
+    /**
+     * Persiste en DB una Conexion nuevo
+     *
+     * @param string                          $direccion        Dirreccion de instalacion solicitada
+     * @param DateTime                        $fechaReal        Fecha en que se ha concretado la instalcion
+     * @param string                          $coord            Coordenadas para geoLocalizacion
+     * @param integer                         $esMoroso         1: Moroso , 0: No moroso
+     * @param integer                         $idAbonado             
+     * @param integer                         $idEstadoConexion      
+     * @param integer                         $idServicio            
+     * @param integer                         $idLocalidad           
+     *
+     * @return integer|null       El ID asigando a la conexion
+     */
+
+    public function persistirConexion($direccion,$fechaReal,$coord,$esMoroso,$idAbonado,$idEstadoConexion,$idServicio,$idLocalidad){
+
+        $sql_nueva_conexion = "INSERT INTO
+                        Conexion 
+                        (direccion,fechaInstalacionReal,coordenadas, esMoroso, idAbonado, idEstadoConexion,idServicio, idLocalidad)
+                        VALUES 
+                        ('$direccion', NULL, NULL, $esMoroso, $idAbonado, $idEstadoConexion,$idServicio,$idLocalidad)";
+
+        $conn = $this->getInstanciaConexion();
+        $query = $conn->prepare($sql_nueva_conexion);
+        $query->execute();
+        return $conn->lastInsertId();
+    }
+
+    /**
+     * Persiste en DB un Contrato de Conexion nuevo
+     *
+     * @param integer                         $idAbonado             
+     * @param integer                         $idConexion             
+     * @param integer                         $idViaComunicacion
+     * @param DateTime                        $fechaIntalacion1        
+     * @param DateTime                        $fechaIntalacion1
+     *
+     * @return true|false       
+     */
+
+    public function persistirContrataConexion($idAbonado, $idConexion, $idViaComunicacion,$fechaInstalacion1,$fechaInstalacion2){
+
+        $fechaInstalacion1 = date_format($fechaInstalacion1,"Y-m-d H:i:s");
+        $fechaInstalacion2 = date_format($fechaInstalacion2,"Y-m-d H:i:s");
+
+        $sql_contra_conexion = "INSERT INTO
+                        ContrataConexion 
+                        (idAbonado,idConexion,idViaComunicacion,fechaInstalacion1,fechaInstalacion2) 
+                        VALUES 
+                        ($idAbonado, $idConexion, $idViaComunicacion, '$fechaInstalacion1','$fechaInstalacion2')";
+
+        $conn = $this->getInstanciaConexion();
+        $query = $conn->prepare($sql_contra_conexion);
+        return  $query->execute();
+
+    }
 
 
     // Funciones Ajax para consulta en linea a la base 

@@ -29,6 +29,7 @@ encargada deberá enviar un mail al abonado indicando que su reclamo ha sido pro
                 <h2 class="page-header">
                   Hojas de Ruta <small>Listado</small>
                 </h2>
+                {{dump(hojasRuta)}}
                 <!--<ol class="breadcrumb">
                             <li>
                                 <i class="fa fa-user"></i>  <a href="index.html">Abonados</a>
@@ -53,25 +54,36 @@ encargada deberá enviar un mail al abonado indicando que su reclamo ha sido pro
                                         <tr>
                                             <th>NªHoja</th>
                                             <th>Fecha</th>
+                                            <th>Abonado</th>
                                             <th>Conexion</th>
-                                            <th>Tarea</th>
-                                            <th>Zona</th>
-                                            <th>Equipo</th>
+                                            <th>EstadoTrabajo</th>
                                             <th>Prioridad</th>
-                                            <th>Estado</th>
+                                            <th>Equipo</th>
+                                            <th></th>
+                                            
+
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr class="danger">
-                                            <td>5532</td>
-                                            <td>14 Nov 2016</td>
-                                            <td>Con-23123</td>
-                                            <td>Instalación</td>
-                                            <td>Barranqueras</td>
-                                            <td>Cuadrilla 3</td>
-                                            <td>Alta</td>
-                                            <td>Sin Visitar</td>  
-                                        </tr>
+                                     {% for hoja in hojasRuta %}
+                                     <tr class="success">
+
+                                        <td>{{hoja.idHojaRuta}}</td>
+                                        <td>{{hoja.fechaEmision|date("d/m/Y h:m") }}</td>
+                                        <td>{{hoja.apellidoNombre}}</td>
+                                        <td>{{hoja.idConexion}}</td>
+                                        <td>{{hoja.estadoTrabajo}}</td>
+                                        <td>{{hoja.nombrePrioridad}}</td>
+                                        <td>{{hoja.idEquipoTecnico}}</td>
+                                        <td><button><i class="fa fa-fw fa-tasks"></i>Tareas</button>
+                                        <button><i class="fa fa-fw fa-wrench"></i>Insumos</button>
+                                        <button><i class="fa fa-fw fa-file-text-o"></i>Observaciones</button>
+                                        </td>
+                                      
+                                    </tr>
+                                    {% endfor %}
+
+                                        
                                     </tbody>
                                 </table>
                             </div>

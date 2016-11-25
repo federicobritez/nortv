@@ -1,0 +1,51 @@
+{% extends 'panel_base.html.twig' %}
+
+{% block title %}{{ parent() }}{% endblock %}
+
+{% block body %} {{parent()}}
+
+<div id="wrapper">
+        {% block sidebar %}{{parent()}}{% endblock%}
+
+        {% block page_content %}
+    <div id="page-wrapper">
+
+        <div class="container-fluid">
+
+            <!-- Page Heading -->
+            <div class="row">
+              <div class="col-lg-12">
+                <h2 class="page-header">
+                  Abonado Creado con Exito <small>Detalle </small>
+                </h2>
+               </div>
+            </div>
+
+            <div class="row">
+                <div class="jumbotron">
+                    <h3>Nº Abonado:  {{idAbonado}} </h3>
+                    <h3>Nº Conexion:  {{idConexion}}</h3>
+
+
+                    <p>Primer Fecha Instalacion programada para: {{params.inputFecha1}}</p>
+                    <p>Segunda Fecha Instalacion programada para: {{params.inputFecha2}}</p>
+
+                    <p>Servicio : </p>
+                    <p><a href="{{ path('abonado', {'page': 'listado'}) }}" class="btn btn-primary btn-lg" role="button">Volver</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <!-- /.container-fluid -->
+    </div>
+    <!-- /#page-wrapper -->
+        {% endblock %}
+</div>
+<!-- /#wrapper --> 
+
+{% endblock %}
+
+{% block footer %}  {{ parent() }}  {% endblock %}
+
+{%block javascripts %}{{ parent() }}
+{% endblock %}

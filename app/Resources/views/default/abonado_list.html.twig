@@ -14,10 +14,10 @@
 
             <!-- Page Heading -->
             <div class="row">
-              <div class="col-lg-10">
+              <div class="col-lg-12">
                 <h2 class="page-header">
                   Abonados <small>Registrados en el sistema</small>
-                  {{dump(debug)}}
+                  
                 </h2>
                 <!--<ol class="breadcrumb">
                             <li>
@@ -35,7 +35,7 @@
             <!-- Crear abonado con formulario Modal-->
             <div class="row">
                 <div class="col-lg-10 ">
-                    <button type="submit" class="btn btn-default btn-primary" data-toggle="modal" data-target="#modalCrearAbonado">Crear Abonado</button>
+                    <button type="button" class="btn btn-default btn-primary" data-toggle="modal" data-target="#modalCrearAbonado">Crear Abonado</button>
                     <dl>
                     <div class="modal fade" id="modalCrearAbonado">
                       <div class="modal-dialog">
@@ -46,70 +46,91 @@
                             <p>Para ingresar un nuevo abonados debe llenar el siguente formulario</p>
                           </div>
                           <div class="modal-body">
-<form class="form-horizontal">
+              <form id="formAbonado" class="form-horizontal"  action="{{ path('abonado', {'page': 'guardarNuevo'}) }}" method="POST"> 
                 <fieldset>
                  
                   <div class="form-group">
                     <label for="inputNombre" class="col-lg-4 control-label"> Nombre <span class="required">*</span></label>
                     <div class="col-lg-5">
-                      <input type="text" class="form-control" id="inputNombre" placeholder="" required="true">
+                      <input type="text" class="form-control" id="inputNombre" name="inputNombre" placeholder="" required="true">
                     </div>
                   </div>
                   <div class="form-group">
                     <label for="inputApellido" class="col-lg-4 control-label">Apellido<span class="required">*</label>
                     <div class="col-lg-5">
-                      <input type="text" class="form-control" id="inputApellido" placeholder="">
+                      <input type="text" class="form-control" id="inputApellido" name="inputApellido" placeholder="">
                     </div>
                   </div>
                   <div class="form-group">
                     <label for="inputDni" class="col-lg-4 control-label">DNI<span class="required">*</label>
                     <div class="col-lg-5">
-                      <input type="text" class="form-control" id="inputDni" placeholder="">
+                      <input type="text" class="form-control" id="inputDni" name="inputDni" placeholder="">
                     </div>
                   </div>
                   <div class="form-group">
                     <label for="inputEmail" class="col-lg-4 control-label">Email<span class="required">*</label>
                     <div class="col-lg-5">
-                      <input type="email" class="form-control" id="inputEmail" placeholder="">
+                      <input type="email" class="form-control" id="inputEmail" name="inputEmail" placeholder="">
                     </div>
                   </div>
                   <div class="form-group">
                     <label for="inputDireccion" class="col-lg-4 control-label">Dirección<span class="required">*</label>
                     <div class="col-lg-5">
-                      <input type="text" class="form-control" id="inputDireccion" placeholder="">
+                      <input type="text" class="form-control" id="inputDireccion" name="inputDireccion" placeholder="">
                     </div>
                   </div>
-                  <div class="form-group">
-                    <label for="selectLocalidad" class="col-lg-4 control-label">Localidad<span class="required">*</label>
-                    <div class="col-lg-5">
-                      <select class="form-control" id="selectLocalidad">
-                        <option>1</option>
-                        <option>2</option>
-                        <option>3</option>
-                        <option>4</option>
-                        <option>5</option>
-                      </select>        
-                    </div>
-                  </div>
+                  
                   <div class="form-group">
                     <label for="inputDireccion" class="col-lg-4 control-label">Telefono Fijo</label>
                     <div class="col-lg-5">
-                      <input type="text" class="form-control" id="inputTelFijo" placeholder="">
+                      <input type="text" class="form-control" id="inputTelFijo" name="inputTelFijo" placeholder="">
                     </div>
                   </div>
                   <div class="form-group">
                     <label for="inputDireccion" class="col-lg-4 control-label">Telefono Celular</label>
                     <div class="col-lg-5">
-                      <input type="text" class="form-control" id="inputTelCelular" placeholder="">
+                      <input type="text" class="form-control" id="inputTelCelular" name="inputTelCelular" placeholder="">
                     </div>
                   </div>
 
+                  <div class="form-group">
+                    <label for="inputServicio" class="col-lg-4 control-label">Tipo Servicio</label>
+                    <div class="col-lg-8">
+                      <div class="btn-group" data-toggle="buttons">
 
+                          <label class="btn btn-primary active">
+                          <input type="radio" checked autocomplete="off" name="inputServicio" value="1"> Estandar
+                          </label>
+                          <label class="btn btn-primary">
+                          <input type="radio" autocomplete="off" name="inputServicio" value="2"> Plus
+                          </label>
+                          <label class="btn btn-primary">
+                          <input type="radio" autocomplete="off" name="inputServicio" value="3"> Premium
+                          </label>
+                    </div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="inputDireccionInstalacion" class="col-lg-4 control-label">Dirección de Instalacion<span class="required">*</label>
+                    <div class="col-lg-5">
+                      <input type="text" class="form-control" id="inputDireccionInstalacion" name="inputDireccionInstalacion" placeholder="">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="selectLocalidad" class="col-lg-4 control-label">Localidad<span class="required">*</label>
+                    <div class="col-lg-5">
+                      <select class="form-control" id="selectLocalidad" name="inputLocalidad">
+                        {% for  local in localidades %}
+                          <option value="{{local.idLocalidad}}">{{local.nombreLocalidad}}</option>  
+                        {%endfor%}
+                      </select>        
+                    </div>
+                  </div>
                   <div class="form-group">
                     <label for="inputDireccion" class="col-lg-4 control-label">Fecha Instalacion <span class="required">*</label>
                     <div class="col-lg-5">
                       <div class='input-group date' id='datetimepicker1'>
-                        <input type='text' class="form-control" />
+                        <input type='text' class="form-control" name="inputFecha1" />
                         <span class="input-group-addon">
                         <span class="fa fa-calendar">
                         </span>
@@ -117,12 +138,11 @@
                       </div>
                     </div>
                   </div>
-
                   <div class="form-group">
                     <label for="inputDireccion" class="col-lg-4 control-label">Fecha Instalacion <span class="required">*</label>
                     <div class="col-lg-5">
                       <div class='input-group date' id='datetimepicker2'>
-                        <input type='text' class="form-control" />
+                        <input type='text' class="form-control" name="inputFecha2" />
                         <span class="input-group-addon">
                         <span class="fa fa-calendar">
                         </span>
@@ -133,16 +153,8 @@
 
                   <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-primary">Guardar Cambios</button>
+                    <button type="submit" class="btn btn-primary" >Guardar Cambios</button>
                   </div>
-
-                    
-                  <!--<div class="form-group">
-                    <div class="col-lg-10 col-lg-offset-2">
-                      <button type="reset" class="btn btn-default">Cancelar</button>
-                      <button type="submit" class="btn btn-primary">Aceptar</button>
-                    </div>
-                  </div>-->
                 </fieldset>
               </form>                                
                             
@@ -158,7 +170,7 @@
 
             <!-- Tabla de Abonados -->
             <div class="row">
-                <div class="col-lg-10">
+                <div class="col-lg-12">
                     <!--<h2>Contextual Classes</h2>-->
                     <div class="table-responsive">
                         <table id="datatable-norTv" class="table table-bordered table-hover table-striped">
@@ -183,7 +195,7 @@
                                       <td>{{abonado.telefono}}</td>
                                       <td>{{abonado.celular}}</td>
                                       <td>{{abonado.email}}</td>
-                                      <td></td>
+                                      <td><button> X <i class="fa fa-plug"></i></button></td>
                                   </tr>
                                 {% endfor %}
                                 

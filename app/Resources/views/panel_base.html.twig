@@ -102,11 +102,13 @@
             <div class="collapse navbar-collapse navbar-ex1-collapse">
                 <ul class="nav navbar-nav side-nav">
                     <li class="active">
-                        <a href="index.html"><i class="fa fa-fw fa-dashboard"></i> Panel</a>
+                        <a href="{{ path('homepage', {'page': 'panel_principal'}) }}"><i class="fa fa-fw fa-dashboard"></i> Panel</a>
                     </li>
                     
                     <li>
-                        <a href="javascript:;" data-toggle="collapse" data-target="#demo"><i class="fa fa-fw fa-user"></i> Abonados <i class="fa fa-fw fa-caret-down"></i></a>
+                        <a href="{{ path('abonado', {'page': 'listado'}) }}"><i class="fa fa-fw fa-user"></i>Abonados</a>
+
+                        <!--<a href="javascript:;" data-toggle="collapse" data-target="#demo"><i class="fa fa-fw fa-user"></i> Abonados <i class="fa fa-fw fa-caret-down"></i></a>
                         <ul id="demo" class="collapse">
                             <li>
                                 <a href="{{ path('abonado', {'page': 'nuevo'}) }}">Nuevo Abonado</a>
@@ -115,6 +117,7 @@
                                 <a href="{{ path('abonado', {'page': 'listado'}) }}">Listado</a>
                             </li>
                         </ul>
+                        -->
                     </li>
                     <li>
                         <a href="{{ path('reclamo', {'page': 'listado'}) }}"><i class="fa fa-fw fa-life-ring"></i> Reclamos</a>

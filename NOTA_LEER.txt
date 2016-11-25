@@ -43,3 +43,11 @@ la base de datos que fueron pasados por whataaaapp.
 5 - Hace un select para chequear que se actualizó la tabla.
 
 
+
+
+
+=============================================================
+Observaciones : 
+Faltantes:
+	Abonado con localidad
+	

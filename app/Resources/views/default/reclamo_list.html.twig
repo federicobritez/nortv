@@ -28,7 +28,6 @@ encargada deberá enviar un mail al abonado indicando que su reclamo ha sido pro
               <div class="col-lg-6">
                 <h2 class="page-header">
                   Reclamos <small>Listado</small>
-                  {{ dump(reclamos) }}
                 </h2>
                 <!--<ol class="breadcrumb">
                             <li>
@@ -61,6 +60,7 @@ encargada deberá enviar un mail al abonado indicando que su reclamo ha sido pro
                                             <th>Via de Comun.</th>
                                             <th>EstadoReclamo</th>
                                             <th>Descripcion</th>
+                                            <th></th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -75,8 +75,9 @@ encargada deberá enviar un mail al abonado indicando que su reclamo ha sido pro
                                       <td>{{reclamo.nombreLocalidad}}</td>
                                       <td>{{reclamo.nombreViaComunicacion}}</td>
                                       <td>{{reclamo.estadoReclamo}}</td>
-                                      <td>VA UN BOTON</td>
+                                      
                                       <td>...</td>
+                                      <td>VA UN BOTON</td>
                                     </tr>
                                     {% endfor %}
                                        
