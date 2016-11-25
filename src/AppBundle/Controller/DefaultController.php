@@ -7,25 +7,38 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\Query\ResultSetMapping;
 use Doctrine\DBAL\DriverManager;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 
 
 class DefaultController extends Controller
 {
+        
     /**
-     * @Route("/{page}", name="homepage" ,defaults={"page"="index"})
+     * @Route("/", name="index" )
      */
-    public function indexAction(Request $request,$page="index")
+    public function indexAction(Request $request, $page="index")
     {
 
-
-        // replace this example code with whatever you need
-        return $this->render('default/'.$page.'.html.twig', [
-            'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
-        ]);
+        return $this->render(sprintf('default/%s.html.twig', "index")); 
     }
 
 
+    /**
+     * @Route("/panel", name="homepage" )
+     */
+    public function panelAction(Request $request, $page="index")
+    {
+
+        $estadSist = $this->getEstadisticasSistema();
+
+
+        return $this->render(sprintf('default/%s.html.twig', "panel_principal"),
+                            array("estad"   => $estadSist)); 
+    }
 
     /**
      * @Route("/abonado/{page}", name="abonado" ,defaults={"page"="null"})
@@ -171,9 +184,25 @@ class DefaultController extends Controller
      */
     public function hojaRutaAction(Request $request,$page="index")
     {
-        $hojasRuta = $this->getHojaDeRuta();
-        return $this->render(sprintf('default/%s.html.twig', "hoja_ruta_list"),
-                            array("hojasRuta" => $hojasRuta)); 
+
+        $arrayClassRow = array("BAJA" => "success", "MEDIA" => "warning" , "ALTA" => "danger");
+        if($page == "index"){
+            $hojasRuta = $this->getHojaDeRuta();
+            return $this->render(sprintf('default/%s.html.twig', "hoja_ruta_list"),
+                            array("hojasRuta" => $hojasRuta));     
+        }
+
+        if($page == "detalle"){
+
+            $idHojaRuta = $request->get("idHojaRuta");
+
+            $hojaRuta =  $this->getHojaDeRuta($idHojaRuta);
+
+            $detalleHoja = $this->getDetalleHojaDeRuta($idHojaRuta);
+
+            return $this->render(sprintf('default/%s.html.twig', "hoja_ruta_detalle"),
+                            array("detalleHoja" => $detalleHoja, "hoja"=> $hojaRuta[0],"classRow" => $arrayClassRow));     
+        }
 
 
     }
@@ -517,15 +546,45 @@ class DefaultController extends Controller
     }
 
 
+
     /**
      * Devuelve la hoja de ruta, con las conexiones asocidas, el trabajo a realizar
      * y la descripcion de la tarea.
      *
      * @param string                           $fecha           Format:("dd/mm/yyyy")
+     * @param string                           $fecha           Format:("dd/mm/yyyy")
      *
      * @return array|null 
      */
-    public function getHojaDeRuta($fecha=""){
+    public function getHojaDeRuta($id="", $fecha=""){
+
+        $conn = $this->getInstanciaConexion();
+
+        $sql_hoja = "SELECT h.idHojaRuta, h.fechaEmision 
+                    FROM HojaRuta AS h";
+
+        if($id != ""){
+            $sql_hoja.=" WHERE h.idHojaRuta = $id";
+        }
+
+        $query = $conn->prepare($sql_hoja);
+        $query->execute();
+        $query->bindValue("id",$id);
+        $query->bindValue("fecha",$fecha);
+        return $query->fetchAll();
+
+    }
+
+
+    /**
+     * Devuelve la hoja de ruta, con las conexiones asocidas, el trabajo a realizar
+     * y la descripcion de la tarea.
+     *
+     * @param int                           $id             El id de laHoja de Ruta
+     *
+     * @return array|null 
+     */
+    public function getDetalleHojaDeRuta($id=""){
 
         //HojaRuta: idHojaRuta  fechaEmision
 
@@ -548,32 +607,56 @@ class DefaultController extends Controller
                 et.idEquipoTecnico,
                 i.nombreInsumo,
                 p.nombrePrioridad,
-                a.apellidoNombre
+                a.apellidoNombre,
+                z.nombreZona
+
 
             FROM HojaRuta AS h
             INNER JOIN ConexionEnHojaRuta AS ch ON h.idHojaRuta = ch.idHojaRuta
             INNER JOIN Conexion c  ON  c.idConexion = ch.idConexion
+            INNER JOIN Localidad l ON c.idLocalidad = l.idLocalidad
+            INNER JOIN Zona z ON l.idZona = z.idZona 
             INNER JOIN Trabajo  t  ON t.idHojaRuta = h.idHojaRuta
             INNER JOIN TrabajoRealizado rt  ON  rt.idTrabajo = t.idTrabajo 
             INNER JOIN EquipoTecnico et  ON  et.idEquipoTecnico = rt.idEquipoTecnico
             INNER JOIN Insumo i  ON  i.idInsumo = rt.idInsumo
             INNER JOIN PrioridadTrabajo p ON p.idPrioridadTrabajo = t.idPrioridadTrabajo
             INNER JOIN Abonado a ON a.idAbonado = c.idAbonado
-            ";
+            WHERE h.idHojaRuta= :id";
 
-
-
-        if($fecha != ""){
-            $sqlHojaRuta .= "";  
-        }
 
         $query = $conn->prepare($sqlHojaRuta);
+        $query->bindValue("id",$id);
         $query ->execute();
 
         return $query->fetchAll();
 
     }
 
+    /**
+     * Devuelve las tareas realiazas en un trabajo especificado por parametro
+     * @param int                           $id             El id de Trabajo
+     *
+     * @return array|null 
+     */
+    public function getTareaPorTrabajo($idTrabajo){
+
+        $conn = $this->getInstanciaConexion();
+
+        $sql_trabajos_por_tarea = "SELECT 
+                            t.idTrabajo,
+                            ta.nombreTarea
+                        FROM TareaPorTrabajo tpt
+                        INNER JOIN Trabajo t ON tpt.idTrabajo = t.idTrabajo
+                        INNER JOIN Tarea ta ON tpt.idTarea = ta.idTarea
+                        WHERE tpt.idTrabajo = :idTrabajo";
+
+        $query = $conn->prepare($sql_trabajos_por_tarea);
+        $query->bindValue("idTrabajo",$idTrabajo);
+        $query ->execute();
+
+        return $query->fetchAll();
+    }
 
     /**
      * Persiste en DB un Aboando nuevo
@@ -661,9 +744,46 @@ class DefaultController extends Controller
 
     }
 
+    /**
+     * Obtiene la cantida de Abonados, Conexiones, Reclamos y Hojas de ruta
+     *
+     * @return array 
+     */
+
+    public function getEstadisticasSistema(){
+
+        
+        $conn = $this->getInstanciaConexion();
+        $sql_count_abonado = 'SELECT Count(*) FROM Abonado ';
+        $queryAbonado = $conn->prepare($sql_count_abonado);
+        $queryAbonado->execute();
+        $cantAbonados= $queryAbonado->fetchColumn();
+
+        $sql_count_conexion = " SELECT COUNT(*) FROM Conexion";
+        $queryConexion = $conn->prepare($sql_count_conexion);
+        $queryConexion->execute();
+        $cantConexion= $queryConexion->fetchColumn();
+
+
+        $sql_count_hoja_ruta = " SELECT COUNT(*) FROM HojaRuta";
+        $queryHojaRuta = $conn->prepare($sql_count_hoja_ruta);
+        $queryHojaRuta->execute();
+        $cantHojaRuta= $queryHojaRuta->fetchColumn();
+
+        $sql_count_reclamo = " SELECT COUNT(*) FROM Reclamo";
+        $queryReclamo = $conn->prepare($sql_count_reclamo);        
+        $queryReclamo->execute();
+        $cantReclamo = $queryReclamo->fetchColumn();
+
+        $estadisticas = array("abonados"=>$cantAbonados,"conexiones"=>$cantConexion,
+                              "hojasRuta"=>$cantHojaRuta,"reclamos"=>$cantReclamo);
+
+        return $estadisticas;
+
+    }
+
 
     // Funciones Ajax para consulta en linea a la base 
-
 
     /**
     * Ajax Abonado
@@ -761,40 +881,33 @@ class DefaultController extends Controller
             }
             return new JsonResponse(array('result' => "false"));
 
-
-            
-
     }
+
+   
     /**
-    * Ajax Reservas : Valida si un servicio está disponible para esa fecha y horario.
+    * Ajax Tareas en Trabajo : 
     *
-    * @Route("/ajaxServicios/horarioServicio", name="ajax_diponibilidad_servicio")
+    * @Route("/ajaxServicios/tareasEnTrabajo", name="ajax_tareas_trabajo")
     *
     * @param Request $request
     *
     * @return Response
     */
-    public function ajaxDisponibilidadServicioAction(Request $request){
+    public function ajaxTareasTrabajoAction(Request $request){
 
-      $idServicio = $request->get("id_servicio");
+      $idTrabajo= $request->get("idTrabajo");
 
-      $horarios = $this->getHorariosServicios();
+      $tareas = $this->getTareaPorTrabajo($idTrabajo);
 
       $encoders = array(new JsonEncoder());
       $normalizers = array(new ObjectNormalizer());
 
       $serializer = new Serializer($normalizers, $encoders);
 
-      $jsonHorarios = $serializer->serialize($horarios, 'json');
+      $jsonTareas = $serializer->serialize($tareas, 'json');
 
-      return new JsonResponse(array('horarios' => $jsonHabitaciones));  
+      return new JsonResponse(array('Tareas' => $jsonTareas));  
     }
-
-
-
-
-
-
 
 
     /*

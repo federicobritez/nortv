@@ -72,13 +72,15 @@ encargada deberá enviar un mail al abonado indicando que su reclamo ha sido pro
                                       <td><a href="#">{{r.idConexion}}</a></td>
                                       <td>{{r.nombreViaComunicacion}}</td>
                                       <td>{{r.estadoReclamo|upper}}</td>
-                                      <td><button type="button" class="btn btn-default btn-primary" data-toggle="modal" data-target="#modalDetalleAbonado" onclick="setDetalles('{{r.idReclamo}}','{{r.apellidoNombre}}','{{r.nombreZona}}','{{r.direccion}}','{{r.esMoroso}}','{{r.nombreServicio}}','{{r.descripcion}}')">Detalle</button></td>
+                                      <td><button type="button" class="btn btn-default btn-primary" data-toggle="modal" data-target="#modalDetalleReclamo" onclick="setDetalles('{{r.idReclamo}}','{{r.apellidoNombre}}','{{r.nombreZona}}','{{r.direccion}}','{{r.esMoroso}}','{{r.nombreServicio}}','{{r.descripcion}}')">Detalle</button></td>
                                     </tr>
                                     {% endfor %}
                                        
                                     </tbody>
                                 </table>
-                                <div class="modal" id="modalDetalleAbonado">
+
+                                <!-- Modal Detalle de Reclamo -->
+                                <div class="modal" id="modalDetalleReclamo">
                                   <div class="modal-dialog">
                                     <div class="modal-content">
                                       <div class="modal-header">

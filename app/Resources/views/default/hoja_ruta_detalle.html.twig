@@ -27,8 +27,9 @@ encargada deberá enviar un mail al abonado indicando que su reclamo ha sido pro
             <div class="row">
               <div class="col-lg-6">
                 <h2 class="page-header">
-                  Hojas de Ruta <small>Listado</small>
+                  Hojas de Ruta:  {{hoja.idHojaRuta}}<small> - Fecha {{ hoja.fechaEmision|date("d/m/Y h:m")}}</small>
                 </h2>
+
                 <!--<ol class="breadcrumb">
                             <li>
                                 <i class="fa fa-user"></i>  <a href="index.html">Abonados</a>
@@ -43,40 +44,70 @@ encargada deberá enviar un mail al abonado indicando que su reclamo ha sido pro
             <!-- /.row -->
 
             <div class="row">
-            	<div class="col-lg-10">
+            	<div class="col-lg-12">
             		<div class="row">
-                        <div class="col-lg-10">
+                        <div class="col-lg-12">
                             <!--<h2>Contextual Classes</h2>-->
                             <div class="table-responsive">
                                 <table id="datatable-norTv" class="table table-bordered table-hover table-striped">
                                     <thead>
                                         <tr>
-                                            <th>NªHoja</th>
-                                            <th>Fecha</th>
-                                            <!--<th>Abonado</th>
+                                            <th>Abonado</th>
                                             <th>Conexion</th>
+                                            <th>Zona</th>
                                             <th>EstadoTrabajo</th>
                                             <th>Prioridad</th>
-                                            <th>Equipo</th>-->
-                                            <th>Acciones</th>
-                                            
-
+                                            <th>Equipo</th>
+                                            <th>Detalles</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                     {% for hoja in hojasRuta %}
-                                     <tr class="info">
+                                     {% for hoja in detalleHoja %}
+                                     <tr class="{{classRow[hoja.nombrePrioridad|upper]}}">
 
-                                        <td>{{hoja.idHojaRuta}}</td>
-                                        <td>{{hoja.fechaEmision|date("d/m/Y h:m") }}</td>
-                                        <td><a class="btn btn-default" href="{{ path('hojaRuta', {'page': 'detalle'}) }}?idHojaRuta={{hoja.idHojaRuta}}"><i class="fa fa-fw fa-tasks"></i>Trabajos</a>
-                                        </td>
+                                        <td>{{hoja.apellidoNombre}}</td>
+                                        <td>{{hoja.idConexion}}</td>
+                                        <td>{{hoja.nombreZona}}</td>
+                                        <td>{{hoja.estadoTrabajo}}</td>
+                                        <td>{{hoja.nombrePrioridad}}</td>
+                                        <td>{{hoja.idEquipoTecnico}}</td>
+                                        <td><button data-toggle="modal" data-target="#modalDetalleTrabajo"onclick="setTareasTrabajo('{{hoja.idTrabajo}}')">Tareas
+                                        </button></td>
                                       
                                     </tr>
                                     {% endfor %}
                                         
                                     </tbody>
                                 </table>
+
+                                <!-- Modal Detalle de Tarea -->
+                                <div class="modal" id="modalDetalleTrabajo">
+                                  <div class="modal-dialog">
+                                    <div class="modal-content">
+                                      <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                        <h4 class="modal-title">Detalle tareas Realizadas</h4> 
+                                      </div>
+                                      <div class="modal-body">
+                                        <table class="table-responsive" id="table_tareas">
+                                            <thead>
+                                            <tr>
+                                                <th>Tarea</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                
+                                            </tbody>
+
+                                        </table>
+                                      </div>
+                                      <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+
                             </div>
                         </div>
                     </div>
@@ -114,5 +145,25 @@ $(document).ready(function() {
         }
     });
 } );
+
+function setTareasTrabajo(idTrabajo){
+
+    $.ajax({
+            type:"POST",
+            url: "{{ path('ajax_tareas_trabajo') }}",
+            data: {'idTrabajo':idTrabajo
+                  },
+            dataType: 'json',
+            success: function (response){  
+                tareas = $.parseJSON(response.Tareas);
+                $('#table_tareas tbody > tr').empty();
+                for( i in tareas){         
+                    $('#table_tareas').append('<tr><td><p>'+tareas[i].nombreTarea+'</p></td></tr>');     
+                }
+            }
+          });
+}
+
+
 </script>
 {% endblock %}
